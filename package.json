@@ -1,0 +1,25 @@
+{
+  "name": "blockchain-developer-bootcamp-final-project",
+  "version": "1.0.0",
+  "description": "As a teenager, learning English in Brazil, our teacher used to make us play a game: everybody should start writing a text (in English), it could be anything; a story, a dissertation, a letter to the president, a poem, etc. After a while the teacher would give a signal and all the students would pass their text to the right, get the text from someone else, read it and continue the other student’s text in the best way possible, until the next signal from the teacher and so on. The texts would usually end up with 20 to 30 lines and 4 to 6 co-writers. In the end it was always fun to see how the texts unrolled into pearls of creativity or just nonsense.",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mariomazzaferro/blockchain-developer-bootcamp-final-project.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mariomazzaferro/blockchain-developer-bootcamp-final-project/issues"
+  },
+  "homepage": "https://github.com/mariomazzaferro/blockchain-developer-bootcamp-final-project#readme",
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.3.2"
+  }
+}
