@@ -4,9 +4,9 @@ import "../node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 contract FrankensteinTexts is ERC721 {
 
-    uint private requestCounter;
+    uint public requestCounter;
 
-    uint private submitCounter;
+    uint public submitCounter;
 
     uint public frankieId;
 
