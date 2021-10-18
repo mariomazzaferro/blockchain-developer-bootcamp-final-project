@@ -14,7 +14,7 @@ contract FrankensteinTexts is ERC721 {
 
     bool public green;
 
-    address private victor;
+    address public victor;
 
     struct Frankie {
       bytes32[] hashes;
@@ -39,6 +39,11 @@ contract FrankensteinTexts is ERC721 {
       green = true;
     }
 
+    modifier isVictor() {
+      require(msg.sender == victor);
+      _;
+    }
+
     modifier isGreen() {
       require(green == true);
       _;
@@ -57,7 +62,9 @@ contract FrankensteinTexts is ERC721 {
 
     function _startFrankie() private returns(bytes32) {
       bytes32 startHash = bytes32(keccak256(abi.encodePacked(block.difficulty, block.timestamp, hashOrder[requestCounter], hashOrder[submitCounter])));
-      frankies[startHash].editSince = block.timestamp;
+      bytes32[] memory hashes;
+      address[] memory writers;
+      frankies[startHash] = Frankie(hashes, writers, block.timestamp);
       return startHash;
     }
 
@@ -118,5 +125,15 @@ contract FrankensteinTexts is ERC721 {
       _safeMint(msg.sender, frankieId);
       mintedHashes[frankieId] = newHash;
       return frankieId;
+    }
+
+    function seedPlot(bytes32 plotHash) public isVictor() {
+      bytes32[] memory hashes;
+      address[] memory writers;
+      frankies[plotHash] = Frankie(hashes, writers, block.timestamp);
+      frankies[plotHash].hashes.push(plotHash);
+      frankies[plotHash].writers.push(msg.sender);
+      hashOrder[requestCounter] = plotHash;
+      requestCounter++;
     }
 }
