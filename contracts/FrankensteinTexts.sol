@@ -8,6 +8,8 @@ contract FrankensteinTexts is ERC721 {
 
     uint private submitCounter;
 
+    uint public frankieId;
+
     bool private firstTime;
 
     bool public green;
@@ -26,9 +28,12 @@ contract FrankensteinTexts is ERC721 {
 
     mapping (address => bytes32[]) untitledTexts;
 
+    mapping (uint => bytes32) mintedHashes;
+
     constructor() ERC721("Frankies", "FKE") {
       requestCounter = 0;
       submitCounter = 0;
+      frankieId = 0;
       victor = msg.sender;
       firstTime = true;
       green = true;
@@ -50,6 +55,18 @@ contract FrankensteinTexts is ERC721 {
       hashOrder[requestCounter] = chosen;
     }
 
+    function _startFrankie() private returns(bytes32) {
+      bytes32 startHash = bytes32(keccak256(abi.encodePacked(block.difficulty, block.timestamp, hashOrder[requestCounter], hashOrder[submitCounter])));
+      frankies[startHash].editSince = block.timestamp;
+      return startHash;
+    }
+
+    function _updateFrankie(bytes32 newHash, bytes32 oldHash) private {
+      frankies[newHash] = frankies[oldHash];
+      frankies[newHash].hashes.push(newHash);
+      frankies[newHash].writers.push(msg.sender);
+    }
+
     function requestText() public isGreen() returns(bytes32) {
       uint distance;
       unchecked { distance = submitCounter - requestCounter; }
@@ -60,15 +77,13 @@ contract FrankensteinTexts is ERC721 {
       uint rc = requestCounter;
       if(rc % 5 == 0) {
         if(firstTime == true) {
+          bytes32 startHash = _startFrankie();
           firstTime = false;
-          return bytes32(0);
+          return startHash;
         } else {
           firstTime = true;
         }
       }
-      //for(uint i=0; i < frankies[hashOrder[rc]].writers.length; i++) {
-      //  require(msg.sender != frankies[hashOrder[rc]].writers[i]);
-      //}
       unchecked { requestCounter++; }
       frankies[hashOrder[rc]].editSince = block.timestamp;
       return hashOrder[rc];
@@ -76,9 +91,7 @@ contract FrankensteinTexts is ERC721 {
 
     function submitText(bytes32 newHash, bytes32 oldHash) public {
       if(frankies[oldHash].editSince + 1 hours < block.timestamp) {
-        frankies[newHash] = frankies[oldHash];
-        frankies[newHash].hashes.push(newHash);
-        frankies[newHash].writers.push(msg.sender);
+        _updateFrankie(newHash, oldHash);
         if(frankies[newHash].writers.length == 5) {
           for(uint i=0; i < 5; i++) {
             untitledTexts[frankies[newHash].writers[i]].push(newHash);
@@ -91,10 +104,19 @@ contract FrankensteinTexts is ERC721 {
         hashOrder[submitCounter] = oldHash;
         unchecked { submitCounter++; }
       }
-    uint distance;
-    unchecked { distance = submitCounter - requestCounter; }
-    if(green == false && 100 <= distance) {
+      uint distance;
+      unchecked { distance = submitCounter - requestCounter; }
+      if(green == false && 100 <= distance) {
         green = true;
       }
+    }
+
+    function mintFrankie(bytes32 newHash, bytes32 oldHash, uint untitledId) public returns(uint) {
+      _updateFrankie(newHash, oldHash);
+      delete untitledTexts[msg.sender][untitledId];
+      frankieId++;
+      _safeMint(msg.sender, frankieId);
+      mintedHashes[frankieId] = newHash;
+      return frankieId;
     }
 }

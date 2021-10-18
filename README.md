@@ -4,7 +4,7 @@ As a teenager, learning English in Brazil, our teacher used to make us play a ga
 For the Final Project I wish to implement a version of this game on the blockchain, where different random addresses contribute to write a text and gain the opportunity to title and mint the final "Frankenstein Text" as a unique NFT.
 
 # Overview
-The Frankenstein Text will have a fixed number of 5 co-writers, each one contributing with at least 100 characters, but no more than 1000 characters. There should be a maximum amount of time for each individual contribution, probably 1 hour.
+The Frankenstein Text will have a fixed number of 5 co-writers, each one contributing with at least 100 characters, but no more than 1000 characters. There should be a maximum amount of time for each individual contribution, probably 2 hours.
 
 As a writer, you will be pseudo-randomly given a text to contribute, this might be a text with already some contributions or even the opportunity to start a text from scratch. After all 5 contributions are concluded, for a couple of days each co-writer has the opportunity to title and mint the text as a unique NFT.
 
@@ -12,7 +12,7 @@ The Frankenstein Text NFT will have a number of mints associated to it, which wi
 
 There will be two modes to interact with the game: 
 
-  Write Mode – users request a pseudo-random text to contribute, have 1 hour to write and submit their contribution.
+  Write Mode – users request a pseudo-random text to contribute, have 2 hours to write and submit their contribution.
   
   Mint Mode – users have access to their list of finalized Frankenstein Texts that they can title and mint for a limited amount of time after the 5th contribution.
 
@@ -39,3 +39,7 @@ Frankies should follow the ERC-721 standard.
 
 A pain point for developing this game is the randomness aspect of it. Using Chainlink Random Number Generator could solve this but it feels like an overkill, and it would make the game expensive to play.<br/>
 Instead, the initial approach is to implement a pseudo-random enough functionality that at least makes it unfeasible for dishonest players to successfully and consistently receive specific desired texts to contribute.
+
+# Future Improvements (outside the scope of the final project)
+
+Once the basic functionality explained above is implemented, the next step will be to create a generative art character collection called Frankenstein Mugshots. This collection will associate a unique art to each minted Frankenstein Text. It should algorithmicly generate Frankenstein Mugshots based on Frankenstein Texts' data.
