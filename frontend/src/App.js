@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import { getWeb3, getContract } from './utils.js';
 import Header from './Header.js';
+import Write from './Write.js';
 import SeedPlot from './SeedPlot.js';
 import client from './utils.js';
 
@@ -23,7 +25,15 @@ function App() {
       setContract(contract);
       setGreen(green);
       setVictor(victor);
+
+      // for(let i=0; i < 105; i++) {
+      //   const cid = await storeString(`PlotNumber:${i}`);
+      //   await contract.methods.seedPlot(cid).send({from: accounts[0], gas:3000000});
+      //   const sCounter = await contract.methods.submitCounter().call();
+      //   console.log(`Submit Counter: ${sCounter}`);
+      // };
     };
+
     init();
   }, []);
 
@@ -34,12 +44,29 @@ function App() {
     return cid;
   };
 
+  const requestText = async () => {
+    const cid = await contract.methods.requestText().send({from: accounts[0], gas:3000000});
+    return cid;
+  }
+
+  const submitText = async (oldCid, string) => {
+    const newCid = await storeString(string);
+    await contract.methods.submitText(oldCid, newCid).send({from: accounts[0], gas:3000000});
+    const sCounter = await contract.methods.submitCounter().call();
+    console.log(`Submit Counter: ${sCounter}`);
+  }
+
   const seedPlot = async string => {
     const cid = await storeString(string);
     await contract.methods.seedPlot(cid).send({from: accounts[0], gas:3000000});
     const sCounter = await contract.methods.submitCounter().call();
     console.log(`Submit Counter: ${sCounter}`);
   };
+
+  const getBlob = async () => {
+    const blob = await axios.get('https://ipfs.io/ipfs/bafkreie4hlfvaepxesvifb5skxwcw2zrfxdxqvedl57scxvcruqe2u37aa');
+    console.log(blob.data);
+  }
 
   if(
     typeof web3 === 'undefined'
@@ -53,9 +80,10 @@ function App() {
 
   return (
     <div>
-      Frankenstein Texts
       <Header green={green} victor={victor} />
+      <Write requestText={requestText} submitText={submitText} />
       <SeedPlot seedPlot={seedPlot} />
+      <button onClick={getBlob}>Axios Get IPFS Blob</button>
     </div>
   );
 }

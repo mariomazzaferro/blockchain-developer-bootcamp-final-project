@@ -15,6 +15,8 @@ contract FrankensteinTexts is ERC721 {
 
     address public victor;
 
+    event RequestedText(string cid, bool isPlot);
+
     struct Frankie {
         string[] cids;
         address[] writers;
@@ -52,6 +54,14 @@ contract FrankensteinTexts is ERC721 {
     modifier isEditor(string calldata oldCid) {
         require(frankies[oldCid].editor == msg.sender);
         _;
+    }
+
+    function _setGreenTrue() private {
+      uint256 distance;
+      unchecked { distance = submitCounter - requestCounter; }
+      if (green == false && 100 < distance) {
+        green = true;
+      }
     }
 
     function _shuffle() private view returns (uint256) {
@@ -97,6 +107,7 @@ contract FrankensteinTexts is ERC721 {
             if (firstTime == true) {
                 string memory startCid = _startFrankie();
                 firstTime = false;
+                emit RequestedText(startCid, true);
                 return startCid;
             } else {
                 firstTime = true;
@@ -111,6 +122,7 @@ contract FrankensteinTexts is ERC721 {
         }
         frankies[cidOrder[rc]].editSince = block.timestamp;
         frankies[cidOrder[rc]].editor = msg.sender;
+        emit RequestedText(cidOrder[rc], false);
         return cidOrder[rc];
     }
 
@@ -123,23 +135,13 @@ contract FrankensteinTexts is ERC721 {
                 }
             } else {
                 cidOrder[submitCounter] = newCid;
-                unchecked {
-                    submitCounter++;
-                }
+                unchecked { submitCounter++; }
             }
         } else {
             cidOrder[submitCounter] = oldCid;
-            unchecked {
-                submitCounter++;
-            }
+            unchecked { submitCounter++; }
         }
-        uint256 distance;
-        unchecked {
-            distance = submitCounter - requestCounter;
-        }
-        if (green == false && 100 < distance) {
-            green = true;
-        }
+        _setGreenTrue();
     }
 
     function mintFrankie(
@@ -147,6 +149,15 @@ contract FrankensteinTexts is ERC721 {
         string calldata oldCid,
         uint256 untitledId
     ) public returns (uint256) {
+        require(frankies[oldCid].editSince + 3 days < block.timestamp);
+        bool isWriter;
+        for(uint i=0; i < 5; i++) {
+          if(msg.sender == frankies[oldCid].writers[i]) {
+            isWriter = true;
+          }
+        }
+        require(isWriter = true);
+
         _updateFrankie(newCid, oldCid);
         delete untitledTexts[msg.sender][untitledId];
         frankieId++;
@@ -163,5 +174,6 @@ contract FrankensteinTexts is ERC721 {
         frankies[cid].writers.push(msg.sender);
         cidOrder[submitCounter] = cid;
         submitCounter++;
+        _setGreenTrue();
     }
 }
