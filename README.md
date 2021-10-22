@@ -6,9 +6,9 @@ For the Final Project I wish to implement a version of this game on the blockcha
 
 # Overview
 
-The Frankenstein Text will have a fixed number of 5 co-writers. There should be a maximum amount of time for each individual contribution, probably 2 hours.
+The Frankenstein Text will have a fixed number of 5 co-writers. There should be a maximum amount of time for each individual contribution, probably 2 to 3 hours (very generous).
 
-As a writer, you will be pseudo-randomly given a text to contribute, this might be a text with already some contributions or even the opportunity to start a text from scratch. After all 5 contributions are concluded, for a couple of days each co-writer has the opportunity to title and mint the text as a unique NFT.
+As a writer, you will be given a random text to contribute, this might be a text with already some contributions or even the opportunity to start a text from scratch. After all 5 contributions are concluded, for a couple of days each co-writer has the opportunity to title and mint the text as a unique NFT.
 
 The Frankenstein Text NFT will have a number of mints associated to it, which will be the number of co-writers that minted the text. One would imagine that a higher number of mints indicates a higher quality of text, since more contributors thought the text was interesting enough to mint.
 
@@ -23,24 +23,23 @@ Mint – users have access to their list of finalized Frankenstein Texts that th
 WRITE MODE:<br/>
 1- User registers on the site (using metamask).<br/>
 2- User requests to write.<br/>
-3- As a response to the request to write: user receives a random text to contribute.<br/>
+3- User receives a random text to contribute.<br/>
 4- User contributes to the random text and submits the contribution (signed transaction).<br/>
 5- After the 5th contribution, each co-writer is notified that the text is finished and for the next couple of days they have the opportunity to title and mint it as a unique Frankenstein Text NFT.<br/>
-6- User gets tired of saying Frankenstein Text NFTs and starts calling them just "Frankies".
 
 MINT MODE:<br/>
 1- User registers on the site (using metamask).<br/>
-2- User enters Mint Mode (after some contributions, the user should have a list of possible Frankies to title and mint).<br/>
-3- User titles the Frankie of choice and mints it.
+2- User enters Mint Mode (after some contributions, the user should have a list of possible Frankenstein Texts to title and mint).<br/>
+3- User titles the Frankenstein Text of choice and mints it.
 
 # Development
 
-The initial idea is to have the individual contributions stored in IPFS and only the IPFS hashes stored in the blockchain. This way, the architecture of the DApp becomes straightforward and decentralized: a simple frontend that talks to a decentralized backend (IPFS + smart contract).
+The initial idea is to have the individual contributions stored in IPFS and only the IPFS CIDs stored in the blockchain. The backend should be 100% decentralized (IPFS + smart contract).
 
-Frankies should follow the ERC-721 standard.
+Frankenstein Text NFTs should follow the ERC-721 standard.
 
 A pain point for developing this game is the randomness aspect of it. Using Chainlink Random Number Generator could solve this but it feels like an overkill, and it would make the game expensive to play.<br/>
-Instead, the initial approach is to implement a pseudo-random enough functionality that at least makes it unfeasible for dishonest players to successfully and consistently receive specific desired texts to contribute.
+Instead, the initial approach is to implement a pseudo-random functionality that makes it unfeasible for dishonest players to successfully and consistently receive specific desired texts to contribute.
 
 # Future Improvements (outside the scope of the final project)
 
