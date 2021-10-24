@@ -24,8 +24,10 @@ const Write = ({requestText, submitText}) => {
 
   const submit = async (e) => {
     e.preventDefault();
+    console.log('Submited!');
     const oldCid = cid;
-    submitText(oldCid, text);
+    const newText = initialText + '// ' + text;
+    submitText(oldCid, newText);
   }
 
   const updateText = (e) => {

@@ -1,6 +1,7 @@
 import React from 'react';
 
 const Header = ({green, victor}) => {
+
   return (
     <header>
       <h1>{green ? 'Green!' : 'Red...'}</h1>
