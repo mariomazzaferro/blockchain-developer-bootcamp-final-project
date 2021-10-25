@@ -25,12 +25,14 @@ function App() {
       setGreen(green);
       setVictor(victor);
 
-      // for(let i=0; i < 105; i++) {
-      //   const cid = await storeString(`PlotNumber:${i}`);
-      //   await contract.methods.seedPlot(cid).send({from: accounts[0], gas:3000000});
-      //   const sCounter = await contract.methods.submitCounter().call();
-      //   console.log(`Submit Counter: ${sCounter}`);
-      // };
+      for(let i=0; i < 105; i++) {
+        const cid = await storeString(`PlotNumber:${i}`);
+        await contract.methods.seedPlot(cid).send({from: accounts[0], gas:3000000});
+        const sCounter = await contract.methods.submitCounter().call();
+        const dCounter = await contract.methods.deckCounter().call();
+        console.log(`Submit Counter: ${sCounter}`);
+        console.log(`Deck Counter: ${dCounter}`);
+      };
     };
 
     init();

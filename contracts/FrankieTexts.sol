@@ -4,6 +4,8 @@ import "../node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 contract FrankieTexts is ERC721 {
 
+    uint256 private requestCounter;
+
     uint256 public feedCounter;
 
     uint256 public submitCounter;
@@ -19,6 +21,8 @@ contract FrankieTexts is ERC721 {
     event RequestedText(string chosenCid);
 
     event MintedFrankie(uint nftId, string nftCid); // vai ter q ter a 5th cid tbm e indexed
+
+    event NewDeckSize(uint newDeckSize);
 
     struct Frankie {
       string[] cids;
@@ -49,6 +53,7 @@ contract FrankieTexts is ERC721 {
     mapping(string => bool) private plotEnded;
 
     constructor() ERC721("Frankies", "FKE") {
+        requestCounter = 0;
         feedCounter = 0;
         submitCounter = 0;
         deckCounter = 0;
@@ -108,7 +113,19 @@ contract FrankieTexts is ERC721 {
     }
 
     function requestText() public {
-      uint256 random = uint256(keccak256(abi.encodePacked(block.difficulty, block.timestamp, cidOrder[feedCounter], cidOrder[submitCounter]))) % 100;
+      //-----------------------------------------------------------
+      uint256 random = uint256(keccak256(abi.encodePacked(block.difficulty, block.timestamp, cidOrder[feedCounter], cidOrder[submitCounter], requestCounter))) % 100;
+      //-----------------------------------------------------------
+      // uint256 random;
+      // if(requestCounter < 100) {
+      //   random = requestCounter;
+      //   unchecked { requestCounter++; }
+      // } else {
+      //   requestCounter = 0;
+      //   random = requestCounter;
+      //   unchecked { requestCounter++; }
+      // }
+      //----------------------------------------------------------
       editing[msg.sender] = MiniFrankie(deck[random], block.timestamp, random);
       emit RequestedText(deck[random]);
     }
@@ -129,19 +146,13 @@ contract FrankieTexts is ERC721 {
 
     function mintFrankie(string calldata oldCid,string calldata newCid) public {
         require(frankies[oldCid].endedSince + 3 days > block.timestamp);
-        bool isWriter;
-        for(uint i=0; i < 5; i++) {
-          if(msg.sender == frankies[oldCid].writers[i]) {
-            isWriter = true;
-          }
-        }
-        require(isWriter = true);
+        require(keccak256(abi.encodePacked(oldCid)) == keccak256(abi.encodePacked(untitledTexts[msg.sender][untitledCounter[msg.sender]])));
         _updateFrankie(newCid, oldCid);
         untitledCounter[msg.sender]++;
-        frankieId++;
         _safeMint(msg.sender, frankieId);
         mintedCids[frankieId] = newCid;
         emit MintedFrankie(frankieId, newCid);
+        frankieId++;
     }
 
     function requestUntitled() public view hasUntitled() returns(string memory) {
@@ -160,12 +171,20 @@ contract FrankieTexts is ERC721 {
         frankies[cid].writers.push(msg.sender);
         if(deckCounter < deckSize) {
           deck[submitCounter] = cid;
+          unchecked { feedCounter++; }
+          deckCounter++;
         }
         cidOrder[submitCounter] = cid;
-        submitCounter++;
+        unchecked { submitCounter++; }
+    }
+
+    function mintedCidById(uint id) public view returns(string memory) {
+      require(id < frankieId);
+      return mintedCids[id];
     }
 
     function setDeckSize(uint newSize) public isVictor() {
       deckSize = newSize;
+      emit NewDeckSize(deckSize);
     }
 }
