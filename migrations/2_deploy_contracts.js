@@ -1,5 +1,5 @@
-const FrankensteinTexts = artifacts.require("FrankensteinTexts");
+const FrankieTexts = artifacts.require("FrankieTexts");
 
 module.exports = function (deployer) {
-  deployer.deploy(FrankensteinTexts);
+  deployer.deploy(FrankieTexts);
 };
