@@ -15,6 +15,7 @@ const SeedPlot = ({seedPlot}) => {
 
   return (
     <div>
+      <br/>
       <h2>Seed a new Plot:</h2>
       <form onSubmit={(e) => submit(e)}>
         <label htmlFor="plot">Plot</label>

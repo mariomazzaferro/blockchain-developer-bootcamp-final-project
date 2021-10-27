@@ -50,7 +50,7 @@ contract('FrankieTexts', (accounts) => {
   });
 
   //---------------------------------------------------------------------------
-  // For the next tests to work properly, we need to stop the pseudo-randomness functionality
+  // For the next tests to work properly, we need to stop the pseudo-random functionality
 
   it('Should submitText successfully', async () => {
     for(let i=0; i < 15; i++) {
@@ -101,8 +101,12 @@ contract('FrankieTexts', (accounts) => {
     let scAfter = await frankieTexts.submitCounter();
     let fcAfter = await frankieTexts.feedCounter();
 
+    
+    let newestUntitledText = await frankieTexts.requestUntitledText(newestUntitledId);
+    console.log(newestUntitledText);
+
     for(let i=0; i < 5; i++) {
-      await frankieTexts.mintFrankie(`Contribution5:0`,`Title:${i}`);
+      await frankieTexts.mintFrankie(`Contribution5:0`,`Title:${i}`, i);
       let mintedCid = await frankieTexts.mintedCidById(i);
       console.log(`mintedCid${i}:${mintedCid}`);
     };

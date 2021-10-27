@@ -55,22 +55,28 @@ function App() {
     console.log(`Submit Counter: ${sCounter}`);
   }
 
-  const requestUntitled = async () => {
-    const untitled = await contract.methods.requestUntitled().call();
+  const newestUntitledId = async () => {
+    const newestUnId = await contract.methods.requestNewestUntitledId().call();
+    return newestUnId;
+  } 
+
+  const requestUntitled = async id => {
+    const untitled = await contract.methods.requestUntitledText(id).call();
     return untitled;
   }
 
-  const mintFrankie = async (untitledCid, newFrankie) => {
+  const requestUntitledEndedSince = async id => {
+    const endedSince = await contract.methods.requestUntitledEndedSince(id).call();
+    return endedSince;
+  }
+
+  const mintFrankie = async (untitledCid, newFrankie, unId) => {
     const nftCid = await storeString(newFrankie);
-    const res = await contract.methods.mintFrankie(untitledCid, nftCid).send({from: accounts[0], gas:3000000});
+    const res = await contract.methods.mintFrankie(untitledCid, nftCid, unId).send({from: accounts[0], gas:3000000});
     const frankieId = res.events.MintedFrankie.returnValues[0];
     const nftCidFromContract = res.events.MintedFrankie.returnValues[1];
     console.log(`frankieId: ${frankieId}`);
     console.log(`nftCidFromContract: ${nftCidFromContract}`);
-  }
-
-  const discardUntitled = async () => {
-    await contract.methods.discardUntitled().send({from: accounts[0], gas:3000000});
   }
 
   const seedPlot = async string => {
@@ -97,7 +103,7 @@ function App() {
       <Header victor={victor} />
       <Write requestText={requestText} submitText={submitText} />
       <SeedPlot seedPlot={seedPlot} />
-      <Mint requestUntitled={requestUntitled} discardUntitled={discardUntitled} mintFrankie={mintFrankie} mintedCidById={mintedCidById} />
+      <Mint requestUntitled={requestUntitled} newestUntitledId={newestUntitledId} mintFrankie={mintFrankie} mintedCidById={mintedCidById} requestUntitledEndedSince={requestUntitledEndedSince} />
     </div>
   );
 }

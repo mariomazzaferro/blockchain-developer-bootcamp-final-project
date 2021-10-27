@@ -44,8 +44,6 @@ contract FrankieTexts is ERC721 {
 
     mapping(address => string[]) public untitledTexts;
 
-    mapping(address => uint) public untitledCounter;
-
     mapping(uint256 => string) public mintedCids;
 
     mapping(string => bool) private plotEnded;
@@ -55,7 +53,7 @@ contract FrankieTexts is ERC721 {
         feedCounter = 0;
         submitCounter = 0;
         deckCounter = 0;
-        deckSize = 10;
+        deckSize = 10;  //Production:100 / Testing:10
         frankieId = 0;
         victor = msg.sender;
     }
@@ -68,11 +66,6 @@ contract FrankieTexts is ERC721 {
     modifier isValid(string calldata oldCid) {
         require(keccak256(abi.encodePacked(editing[msg.sender].cid)) == keccak256(abi.encodePacked(oldCid)));
         require(editing[msg.sender].editSince + 2 hours > block.timestamp);
-        _;
-    }
-
-    modifier hasUntitled() {
-        require(untitledTexts[msg.sender].length > untitledCounter[msg.sender]);
         _;
     }
 
@@ -104,18 +97,18 @@ contract FrankieTexts is ERC721 {
 
     function requestText() public {
       //Production -----------------------------------------------------------
-      // uint256 random = uint256(keccak256(abi.encodePacked(block.difficulty, block.timestamp, cidOrder[feedCounter], cidOrder[submitCounter], requestCounter))) % deckSize;
-      // unchecked { requestCounter++; }
+      uint256 random = uint256(keccak256(abi.encodePacked(block.difficulty, block.timestamp, cidOrder[feedCounter], cidOrder[submitCounter], requestCounter))) % deckSize;
+      unchecked { requestCounter++; }
       //Testing --------------------------------------------------------------
-      uint256 random;
-      if(requestCounter < deckSize) {
-        random = requestCounter;
-        unchecked { requestCounter++; }
-      } else {
-        requestCounter = 0;
-        random = requestCounter;
-        unchecked { requestCounter++; }
-      }
+      // uint256 random;
+      // if(requestCounter < deckSize) {
+      //   random = requestCounter;
+      //   unchecked { requestCounter++; }
+      // } else {
+      //   requestCounter = 0;
+      //   random = requestCounter;
+      //   unchecked { requestCounter++; }
+      // }
       //----------------------------------------------------------
       editing[msg.sender] = MiniFrankie(deck[random], block.timestamp, random);
       emit RequestedText(deck[random]);
@@ -135,23 +128,33 @@ contract FrankieTexts is ERC721 {
       }
     }
 
-    function mintFrankie(string calldata oldCid,string calldata newCid) public {
+    function mintFrankie(string calldata oldCid, string calldata newCid, uint untitledId) public {
         require(frankies[oldCid].endedSince + 3 days > block.timestamp);
-        require(keccak256(abi.encodePacked(oldCid)) == keccak256(abi.encodePacked(untitledTexts[msg.sender][untitledCounter[msg.sender]])));
+        require(keccak256(abi.encodePacked(oldCid)) == keccak256(abi.encodePacked(untitledTexts[msg.sender][untitledId])));
         _updateFrankie(newCid, oldCid);
-        untitledCounter[msg.sender]++;
         _safeMint(msg.sender, frankieId);
+        delete untitledTexts[msg.sender][untitledId];
         mintedCids[frankieId] = newCid;
         emit MintedFrankie(frankieId, newCid);
         frankieId++;
     }
 
-    function requestUntitled() public view hasUntitled() returns(string memory) {
-        return untitledTexts[msg.sender][untitledCounter[msg.sender]];
+    function mintedCidById(uint id) public view returns(string memory) {
+      require(id < frankieId);
+      return mintedCids[id];
     }
 
-    function discardUntitled() public hasUntitled() {
-        untitledCounter[msg.sender]++;
+    function requestNewestUntitledId() public view returns(uint) {
+        require(untitledTexts[msg.sender].length > 0);
+        return untitledTexts[msg.sender].length - 1;
+    }
+
+    function requestUntitledText(uint untitledId) public view returns(string memory) {
+        return untitledTexts[msg.sender][untitledId];
+    }
+
+    function requestUntitledEndedSince(uint untitledId) public view returns(uint) {
+        return (block.timestamp - frankies[untitledTexts[msg.sender][untitledId]].endedSince);
     }
 
     function seedPlot(string calldata cid) public isVictor() {
@@ -167,10 +170,5 @@ contract FrankieTexts is ERC721 {
         }
         cidOrder[submitCounter] = cid;
         unchecked { submitCounter++; }
-    }
-
-    function mintedCidById(uint id) public view returns(string memory) {
-      require(id < frankieId);
-      return mintedCids[id];
     }
 }

@@ -1,6 +1,6 @@
 # Frankenstein Texts
 
-During our English classes, in Brazil, we used to play a game: everybody should start writing a text (in English), it could be anything; a story, a dissertation, a letter to the president, a poem, etc. After a while the teacher would give us a signal and all the students would pass their text to the right, get the text from someone else, read it and continue the other student’s text in the best way possible, until the next signal from the teacher and so on. The texts would usually end up with 20 to 30 lines and 4 to 6 co-writers. In the end, it was fun to see how the texts unrolled into pearls of creativity or just nonsense. Furthermore, it was a great exercise for practicing english and stimulating creativity.
+During our English classes, in Brazil, we used to play a game: everybody should start writing a text (in English), it could be anything; a story, a dissertation, a letter, a poem, a recipe, etc. After a while the teacher would give us a signal and all the students would pass their text to the right, get the text from someone else, read it and continue the other student’s text in the best way possible, until the next signal from the teacher and so on. The texts would usually end up with 20 to 30 lines and 4 to 6 co-writers. In the end, it was fun to see how the texts unrolled into pearls of creativity or just nonsense. Furthermore, it was a great exercise for practicing english and stimulating creativity.
 
 For the Final Project I wish to implement a version of this game on the blockchain, where different random addresses contribute to write a text and gain the opportunity to title and mint the final "Frankenstein Text" as a unique NFT.
 
@@ -14,9 +14,9 @@ The Frankenstein Text NFT will have a number of mints associated to it, ranging 
 
 There will be two ways to interact with the game:
 
-Write – users request a pseudo-random text to contribute, and have 2 hours to write and submit their contribution.
+Write – users request a random text to contribute, and have 2 hours to write and submit their contribution.
 
-Mint – users have access to their list of finalized Frankenstein Texts that they can title and mint for a limited amount of time after the 5th contribution.
+Mint – users have access to their list of finalized Frankenstein Texts, which they can title and mint for a limited amount of time after the 5th contribution.
 
 # User Workflow
 
@@ -25,7 +25,7 @@ WRITE MODE:<br/>
 2- User requests to write.<br/>
 3- User receives a random text to contribute.<br/>
 4- User contributes to the random text and submits the contribution (signed transaction).<br/>
-5- After the 5th contribution, each co-writer is notified that the text is finished and for the next couple of days they have the opportunity to title and mint it as a unique Frankenstein Text NFT.<br/>
+5- For a couple of days after the 5th contribution, each co-writer has the opportunity to title and mint the text as a unique Frankenstein Text NFT.<br/>
 
 MINT MODE:<br/>
 1- User registers on the site (using metamask).<br/>
@@ -34,13 +34,13 @@ MINT MODE:<br/>
 
 # Development
 
-The initial idea is to have the individual contributions stored in IPFS and only the IPFS CIDs stored in the blockchain. The backend should be 100% decentralized (IPFS + smart contract).
+The idea is to have the individual contributions stored in IPFS and only the IPFS CIDs stored in the blockchain. The backend should be 100% decentralized (IPFS + smart contract).
 
 Frankenstein Text NFTs should follow the ERC-721 standard.
 
 A pain point for developing this game is the randomness aspect of it. Using Chainlink Random Number Generator solves this, but it's also an overkill, and it would make the game expensive to play.<br/>
 Instead, the initial approach is to implement a pseudo-random functionality that makes it unfeasible for dishonest players to successfully and consistently receive specific desired texts to contribute.
 
-# Future Improvements (outside the scope of this final project)
+# Future Improvements (outside the scope of the final project)
 
 Once the basic functionality explained above is implemented, the next step will be to create a generative art character collection called Frankenstein Mugshots. This collection will associate a unique art to each minted Frankenstein Text. It should algorithmicly generate Frankenstein Mugshots based on Frankenstein Texts' data, and have a number of stars in it representing the number of mints.

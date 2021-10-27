@@ -1,31 +1,42 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const Mint = ({ mintFrankie, requestUntitled, discardUntitled, mintedCidById }) => {
+const Mint = ({ mintFrankie, requestUntitled, mintedCidById, newestUntitledId, requestUntitledEndedSince }) => {
+  const [newestUnId, setNewestUnId] = useState(undefined);
+  const [unId, setUnId] = useState(undefined);
   const [untitled, setUntitled] = useState(undefined);
   const [untitledCid, setUntitledCid] = useState(undefined);
   const [title, setTitle] = useState(undefined);
   const [mintedId, setMintedId] = useState(undefined);
 
-  const requestUn = async () => {
-    const untitledCid = await requestUntitled();
+  const requestNewestUnId = async () => {
+    const newestUnId = await newestUntitledId();
+    setNewestUnId(newestUnId);
+    console.log(newestUnId);
+  }
+
+  const updateUnId = (e) => {
+    const unId = e.target.value;
+    setUnId(unId);
+  }
+
+  const requestUn = async (e) => {
+    e.preventDefault();
+    const untitledCid = await requestUntitled(unId);
     setUntitledCid(untitledCid);
+    console.log(untitledCid);
     const blob = await axios.get(`https://ipfs.io/ipfs/${untitledCid}`);
     setUntitled(blob.data);
     console.log(`Untitled Received:${blob.data}`);
-  }
-
-  const discardUn = async () => {
-    console.log('Discarding...');
-    discardUntitled();
-    console.log('Discarded!');
+    const endedSince = await requestUntitledEndedSince(unId);
+    console.log(`Untitled Received Ended Since:${endedSince}`);
   }
 
   const mint = async (e) => {
     e.preventDefault();
     console.log('Minted!');
     const newFrankie = title + ': ' + untitled;
-    mintFrankie(untitledCid, newFrankie);
+    mintFrankie(untitledCid, newFrankie, unId);
   }
 
   const updateTitle = (e) => {
@@ -47,9 +58,17 @@ const Mint = ({ mintFrankie, requestUntitled, discardUntitled, mintedCidById }) 
   return (
     <div>
       <br/>
-      <button onClick={() => requestUn()}>Request Untitled Frankenstein Text</button>
       <br/>
-      <button onClick={() => discardUn()}>Discard Untitled Frankenstein Text</button>
+      <button onClick={() => requestNewestUnId()}>Request Newest Untitled Id</button>
+      <p>{`Your Newest Untitled Id: ${newestUnId}`}</p>
+      <form onSubmit={(e) => requestUn(e)}>
+        <label htmlFor="unId">Untitled Id:</label>
+        <input
+          id="unId" name="unId" type="number"
+          onChange={e => updateUnId(e)}
+        ></input>
+        <button>Get Untitled by Id</button>
+      </form>
       <br/>
       <form onSubmit={(e) => mint(e)}>
         <label htmlFor="title">Title:</label>
@@ -61,15 +80,15 @@ const Mint = ({ mintFrankie, requestUntitled, discardUntitled, mintedCidById }) 
       </form>
       <p>{`Untitled Frankenstein Text: ${untitled}`}</p>
       <br/>
-      <br/>
       <form onSubmit={(e) => getMintedCid(e)}>
         <label htmlFor="mintedId">Minted Id:</label>
         <input
           id="mintedId" name="mintedId" type="number"
           onChange={e => updateMintedId(e)}
         ></input>
-        <button>Get Minted CID by Id</button>
+        <button>Get CID by NFT Id</button>
       </form>
+      <br/>
     </div>
   );
 }

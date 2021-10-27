@@ -37,7 +37,7 @@ const Write = ({requestText, submitText}) => {
     <div>
       <button onClick={request}>Request Text</button>
       <h2>Write your contribution:</h2>
-      <p>{initialText}</p>
+      <p>{`Initial text: ${initialText}`}</p>
       <form onSubmit={(e) => submit(e)}>
         <label htmlFor="text">Contribute:</label>
         <textarea
