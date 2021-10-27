@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const Mint = ({ mintFrankie, requestUntitled, discardUntitled }) => {
+const Mint = ({ mintFrankie, requestUntitled, discardUntitled, mintedCidById }) => {
   const [untitled, setUntitled] = useState(undefined);
   const [untitledCid, setUntitledCid] = useState(undefined);
   const [title, setTitle] = useState(undefined);
+  const [mintedId, setMintedId] = useState(undefined);
 
   const requestUn = async () => {
     const untitledCid = await requestUntitled();
@@ -15,6 +16,7 @@ const Mint = ({ mintFrankie, requestUntitled, discardUntitled }) => {
   }
 
   const discardUn = async () => {
+    console.log('Discarding...');
     discardUntitled();
     console.log('Discarded!');
   }
@@ -31,10 +33,24 @@ const Mint = ({ mintFrankie, requestUntitled, discardUntitled }) => {
     setTitle(title);
   }
 
+  const updateMintedId = (e) => {
+    const mintedId = e.target.value;
+    setMintedId(mintedId);
+  }
+
+  const getMintedCid = async (e) => {
+    e.preventDefault();
+    const mintedCid = await mintedCidById(mintedId);
+    console.log(mintedCid);
+  }
+
   return (
     <div>
-      <button onClick={() => requestUn()}>Request your next Untitled Frankenstein Text</button>
+      <br/>
+      <button onClick={() => requestUn()}>Request Untitled Frankenstein Text</button>
+      <br/>
       <button onClick={() => discardUn()}>Discard Untitled Frankenstein Text</button>
+      <br/>
       <form onSubmit={(e) => mint(e)}>
         <label htmlFor="title">Title:</label>
         <textarea
@@ -44,6 +60,16 @@ const Mint = ({ mintFrankie, requestUntitled, discardUntitled }) => {
         <button>Mint Frankenstein Text</button>
       </form>
       <p>{`Untitled Frankenstein Text: ${untitled}`}</p>
+      <br/>
+      <br/>
+      <form onSubmit={(e) => getMintedCid(e)}>
+        <label htmlFor="mintedId">Minted Id:</label>
+        <input
+          id="mintedId" name="mintedId" type="number"
+          onChange={e => updateMintedId(e)}
+        ></input>
+        <button>Get Minted CID by Id</button>
+      </form>
     </div>
   );
 }

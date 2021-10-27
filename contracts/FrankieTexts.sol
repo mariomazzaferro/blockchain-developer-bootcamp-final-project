@@ -22,8 +22,6 @@ contract FrankieTexts is ERC721 {
 
     event MintedFrankie(uint nftId, string nftCid); // vai ter q ter a 5th cid tbm e indexed
 
-    event NewDeckSize(uint newDeckSize);
-
     struct Frankie {
       string[] cids;
       address[] writers;
@@ -57,7 +55,7 @@ contract FrankieTexts is ERC721 {
         feedCounter = 0;
         submitCounter = 0;
         deckCounter = 0;
-        deckSize = 100;
+        deckSize = 10;
         frankieId = 0;
         victor = msg.sender;
     }
@@ -76,14 +74,6 @@ contract FrankieTexts is ERC721 {
     modifier hasUntitled() {
         require(untitledTexts[msg.sender].length > untitledCounter[msg.sender]);
         _;
-    }
-
-    function _startFrankie() private returns (string memory) { // talvez nem precise dessa função
-        string memory startCid = string(abi.encodePacked('0')); // frontend checka se o cid é 0
-        string[] memory cids;
-        address[] memory writers;
-        frankies[startCid] = Frankie(cids, writers, block.timestamp);
-        return startCid;
     }
 
     function _updateFrankie(string calldata newCid, string calldata oldCid) private {
@@ -113,18 +103,19 @@ contract FrankieTexts is ERC721 {
     }
 
     function requestText() public {
-      //-----------------------------------------------------------
-      uint256 random = uint256(keccak256(abi.encodePacked(block.difficulty, block.timestamp, cidOrder[feedCounter], cidOrder[submitCounter], requestCounter))) % 100;
-      //-----------------------------------------------------------
-      // uint256 random;
-      // if(requestCounter < 100) {
-      //   random = requestCounter;
-      //   unchecked { requestCounter++; }
-      // } else {
-      //   requestCounter = 0;
-      //   random = requestCounter;
-      //   unchecked { requestCounter++; }
-      // }
+      //Production -----------------------------------------------------------
+      // uint256 random = uint256(keccak256(abi.encodePacked(block.difficulty, block.timestamp, cidOrder[feedCounter], cidOrder[submitCounter], requestCounter))) % deckSize;
+      // unchecked { requestCounter++; }
+      //Testing --------------------------------------------------------------
+      uint256 random;
+      if(requestCounter < deckSize) {
+        random = requestCounter;
+        unchecked { requestCounter++; }
+      } else {
+        requestCounter = 0;
+        random = requestCounter;
+        unchecked { requestCounter++; }
+      }
       //----------------------------------------------------------
       editing[msg.sender] = MiniFrankie(deck[random], block.timestamp, random);
       emit RequestedText(deck[random]);
@@ -170,7 +161,7 @@ contract FrankieTexts is ERC721 {
         frankies[cid].cids.push(cid);
         frankies[cid].writers.push(msg.sender);
         if(deckCounter < deckSize) {
-          deck[submitCounter] = cid;
+          deck[deckCounter] = cid;
           unchecked { feedCounter++; }
           deckCounter++;
         }
@@ -181,10 +172,5 @@ contract FrankieTexts is ERC721 {
     function mintedCidById(uint id) public view returns(string memory) {
       require(id < frankieId);
       return mintedCids[id];
-    }
-
-    function setDeckSize(uint newSize) public isVictor() {
-      deckSize = newSize;
-      emit NewDeckSize(deckSize);
     }
 }

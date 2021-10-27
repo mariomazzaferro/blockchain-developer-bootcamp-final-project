@@ -9,7 +9,6 @@ function App() {
   const [web3, setWeb3] = useState(undefined);
   const [accounts, setAccounts] = useState(undefined);
   const [contract, setContract] = useState(undefined);
-  const [green, setGreen] = useState(undefined);
   const [victor, setVictor] = useState(undefined);
 
   useEffect(() => {
@@ -17,22 +16,21 @@ function App() {
       const web3 = await getWeb3();
       const accounts = await web3.eth.getAccounts();
       const contract = await getContract(web3);
-      const green = await contract.methods.green().call();
       const victor = await contract.methods.victor().call();
       setWeb3(web3);
       setAccounts(accounts);
       setContract(contract);
-      setGreen(green);
       setVictor(victor);
 
-      for(let i=0; i < 105; i++) {
-        const cid = await storeString(`PlotNumber:${i}`);
-        await contract.methods.seedPlot(cid).send({from: accounts[0], gas:3000000});
-        const sCounter = await contract.methods.submitCounter().call();
-        const dCounter = await contract.methods.deckCounter().call();
-        console.log(`Submit Counter: ${sCounter}`);
-        console.log(`Deck Counter: ${dCounter}`);
-      };
+      // for(let i=0; i < 11; i++) {
+      //   console.log(`Iteration:${i}`);
+      //   const cid = await storeString(`PlotNumber:${i}`);
+      //   await contract.methods.seedPlot(cid).send({from: accounts[0], gas:3000000});
+      //   const sCounter = await contract.methods.submitCounter().call();
+      //   const dCounter = await contract.methods.deckCounter().call();
+      //   console.log(`Submit Counter: ${sCounter}`);
+      //   console.log(`Deck Counter: ${dCounter}`);
+      // };
     };
 
     init();
@@ -82,6 +80,11 @@ function App() {
     console.log(`Submit Counter: ${sCounter}`);
   };
 
+  const mintedCidById = async mintedId => {
+    const mintedCid = await contract.methods.mintedCidById(mintedId).call();
+    return mintedCid;
+  };
+
   if(
     typeof web3 === 'undefined'
     || typeof accounts === 'undefined'
@@ -91,11 +94,10 @@ function App() {
 
   return (
     <div>
-      
-      <Header victor={victor} green={green} />
+      <Header victor={victor} />
       <Write requestText={requestText} submitText={submitText} />
       <SeedPlot seedPlot={seedPlot} />
-      <Mint requestUntitled={requestUntitled} discardUntitled={discardUntitled} mintFrankie={mintFrankie} />
+      <Mint requestUntitled={requestUntitled} discardUntitled={discardUntitled} mintFrankie={mintFrankie} mintedCidById={mintedCidById} />
     </div>
   );
 }

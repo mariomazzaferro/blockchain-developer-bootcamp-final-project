@@ -1,11 +1,10 @@
 import React from 'react';
 
-const Header = ({green, victor}) => {
+const Header = ({victor}) => {
 
   return (
     <header>
-      <h1>{green ? 'Green!' : 'Red...'}</h1>
-      <h2>Victor: {victor}</h2>
+      <h4>Victor: {victor}</h4>
     </header>
   )
 };

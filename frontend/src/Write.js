@@ -10,16 +10,14 @@ const Write = ({requestText, submitText}) => {
     const res = await requestText();
     const randCid = res.events.RequestedText.returnValues[0];
     console.log(`randCid:${randCid}`);
-    const isBlank = res.events.RequestedText.returnValues[1];
     setCid(randCid);
-    if(!isBlank) { 
+    if(!randCid.includes('00000')) { 
       const blob = await axios.get(`https://ipfs.io/ipfs/${randCid}`);
       setInitialText(blob.data);
     } else {
       setInitialText("");
     }
-    console.log(`cid:${cid}`);
-    console.log(`isBlank:${isBlank}`);
+    console.log(`requestText succeded!`);
   }
 
   const submit = async (e) => {
