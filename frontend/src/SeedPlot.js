@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Container, Button, Form } from 'react-bootstrap';
 
 const SeedPlot = ({seedPlot}) => {
   const [plot, setPlot] = useState(undefined);
@@ -14,18 +15,18 @@ const SeedPlot = ({seedPlot}) => {
   }
 
   return (
-    <div>
+    <Container>
       <br/>
-      <h2>Seed a new Plot:</h2>
-      <form onSubmit={(e) => submit(e)}>
-        <label htmlFor="plot">Plot</label>
-        <textarea
-          id="plot" name="plot" rows="5" cols="50"
+      <Form onSubmit={(e) => submit(e)}>
+        <Form.Group>
+        <Form.Control
+          as="textarea" rows="10"  placeholder="Write plot..."
           onChange={e => updatePlot(e)}
-        ></textarea>
-        <button>Submit Plot</button>
-      </form>
-    </div>
+        ></Form.Control>
+        <Button variant="dark" type="submit">Seed Plot</Button>
+        </Form.Group>
+      </Form>
+    </Container>
   )
 };
 

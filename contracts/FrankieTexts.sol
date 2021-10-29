@@ -20,7 +20,7 @@ contract FrankieTexts is ERC721 {
 
     event RequestedText(string chosenCid);
 
-    event MintedFrankie(uint nftId, string nftCid); // vai ter q ter a 5th cid tbm e indexed
+    event MintedFrankie(uint indexed nftId, string nftCid, string indexed fifthCid);
 
     struct Frankie {
       string[] cids;
@@ -129,13 +129,13 @@ contract FrankieTexts is ERC721 {
     }
 
     function mintFrankie(string calldata oldCid, string calldata newCid, uint untitledId) public {
-        require(frankies[oldCid].endedSince + 3 days > block.timestamp);
+        require(frankies[oldCid].endedSince + 7 days > block.timestamp);
         require(keccak256(abi.encodePacked(oldCid)) == keccak256(abi.encodePacked(untitledTexts[msg.sender][untitledId])));
         _updateFrankie(newCid, oldCid);
         _safeMint(msg.sender, frankieId);
         delete untitledTexts[msg.sender][untitledId];
         mintedCids[frankieId] = newCid;
-        emit MintedFrankie(frankieId, newCid);
+        emit MintedFrankie(frankieId, newCid, oldCid);
         frankieId++;
     }
 

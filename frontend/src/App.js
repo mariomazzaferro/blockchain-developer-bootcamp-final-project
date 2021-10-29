@@ -1,9 +1,18 @@
 import React, { useEffect, useState } from 'react';
+import { Navbar, Nav, Container } from 'react-bootstrap';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { getWeb3, getContract, client } from './utils.js';
-import Header from './Header.js';
+import Home from './Home.js';
 import Write from './Write.js';
 import Mint from './Mint.js';
 import SeedPlot from './SeedPlot.js';
+import metamaskLogo from './metamask.png';
 
 function App() {
   const [web3, setWeb3] = useState(undefined);
@@ -24,7 +33,7 @@ function App() {
 
       // for(let i=0; i < 11; i++) {
       //   console.log(`Iteration:${i}`);
-      //   const cid = await storeString(`PlotNumber:${i}`);
+      //   const cid = await storeString(`//PlotNumber:${i}`);
       //   await contract.methods.seedPlot(cid).send({from: accounts[0], gas:3000000});
       //   const sCounter = await contract.methods.submitCounter().call();
       //   const dCounter = await contract.methods.deckCounter().call();
@@ -56,17 +65,17 @@ function App() {
   }
 
   const newestUntitledId = async () => {
-    const newestUnId = await contract.methods.requestNewestUntitledId().call();
+    const newestUnId = await contract.methods.requestNewestUntitledId().call({from: accounts[0]});
     return newestUnId;
   } 
 
   const requestUntitled = async id => {
-    const untitled = await contract.methods.requestUntitledText(id).call();
+    const untitled = await contract.methods.requestUntitledText(id).call({from: accounts[0]});
     return untitled;
   }
 
   const requestUntitledEndedSince = async id => {
-    const endedSince = await contract.methods.requestUntitledEndedSince(id).call();
+    const endedSince = await contract.methods.requestUntitledEndedSince(id).call({from: accounts[0]});
     return endedSince;
   }
 
@@ -95,16 +104,48 @@ function App() {
     typeof web3 === 'undefined'
     || typeof accounts === 'undefined'
   ) {
-    return <div>Loading...</div>
+    return (
+      <div className="my-5 text-center">
+        <img src={metamaskLogo} width="250" class="mb-4" alt=""/>
+        <h1>Please connect Metamask</h1>
+      </div>
+    )
   }
 
   return (
-    <div>
-      <Header victor={victor} />
-      <Write requestText={requestText} submitText={submitText} />
-      <SeedPlot seedPlot={seedPlot} />
-      <Mint requestUntitled={requestUntitled} newestUntitledId={newestUntitledId} mintFrankie={mintFrankie} mintedCidById={mintedCidById} requestUntitledEndedSince={requestUntitledEndedSince} />
-    </div>
+    <Router>
+      <Navbar bg="dark" variant={"dark"} expand="lg">
+        <Container>
+          <Navbar.Brand><Nav.Link  as={Link} to={"/"} >Frankenstein Texts</Nav.Link></Navbar.Brand>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="me-auto">
+          <Nav.Link  as={Link} to={"/write"}>Write</Nav.Link>
+          <Nav.Link  as={Link} to={"/mint"}>Mint</Nav.Link>
+          { accounts[0] === victor &&
+            <Nav.Link as={Link} to={"/seedplot"}>Seed Plot</Nav.Link>
+          }
+          </Nav>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
+      <Switch>
+          <Route exact path="/">
+            <Home />
+          </Route>
+          <Route exact path="/write">
+            <Write requestText={requestText} submitText={submitText} />
+          </Route>
+          <Route exact path="/mint">
+            <Mint requestUntitled={requestUntitled} newestUntitledId={newestUntitledId} mintFrankie={mintFrankie} mintedCidById={mintedCidById} requestUntitledEndedSince={requestUntitledEndedSince} />
+          </Route>
+          { accounts[0] === victor &&
+            <Route exact path="/seedplot">
+              <SeedPlot seedPlot={seedPlot} />
+            </Route>
+          }
+        </Switch>
+    </Router>
   );
 }
 

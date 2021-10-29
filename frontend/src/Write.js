@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { Container, Button, Form } from 'react-bootstrap';
 
 const Write = ({requestText, submitText}) => {
   const [text, setText] = useState(undefined);
@@ -34,20 +35,24 @@ const Write = ({requestText, submitText}) => {
   }
 
   return (
-    <div>
-      <button onClick={request}>Request Text</button>
-      <h2>Write your contribution:</h2>
-      <p>{`Initial text: ${initialText}`}</p>
-      <form onSubmit={(e) => submit(e)}>
-        <label htmlFor="text">Contribute:</label>
-        <textarea
-          id="text" name="text" rows="5" cols="50"
+    <Container>
+      <br/>
+      <Button variant="dark" size="lg" onClick={request}>Request Text</Button>
+      <br/>
+      <br/>
+      <h5>{`Initial text:`}</h5>
+      <h5>{`"${initialText}"`}</h5>
+      <Form onSubmit={(e) => submit(e)}>
+        <Form.Group>
+        <Form.Control
+          placeholder="Write your contribution..."
+          as="textarea" rows="10"
           onChange={e => updateText(e)}
-        ></textarea>
-        <button>Submit Contribution</button>
-      </form>
-      <button onClick={() => console.log(cid)}>Print CID</button>
-    </div>
+        ></Form.Control>
+        <Button variant="dark" type="submit">Submit Contribution</Button>
+        </Form.Group>
+      </Form>
+    </Container>
   )
 };
 

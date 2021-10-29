@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { Container, Button, Form } from 'react-bootstrap';
 
 const Mint = ({ mintFrankie, requestUntitled, mintedCidById, newestUntitledId, requestUntitledEndedSince }) => {
   const [newestUnId, setNewestUnId] = useState(undefined);
@@ -56,40 +57,47 @@ const Mint = ({ mintFrankie, requestUntitled, mintedCidById, newestUntitledId, r
   }
 
   return (
-    <div>
+    <Container>
       <br/>
+      <Button variant="dark" onClick={() => requestNewestUnId()}>Get your newest Untitled Id</Button>
       <br/>
-      <button onClick={() => requestNewestUnId()}>Request Newest Untitled Id</button>
-      <p>{`Your Newest Untitled Id: ${newestUnId}`}</p>
-      <form onSubmit={(e) => requestUn(e)}>
-        <label htmlFor="unId">Untitled Id:</label>
-        <input
-          id="unId" name="unId" type="number"
+      <h5>{`Your newest Untitled Id: ${newestUnId}`}</h5>
+      <Form onSubmit={(e) => requestUn(e)}>
+        <Form.Group>
+        <Form.Control
+          type="number"
+          placeholder="Untitled Id"
           onChange={e => updateUnId(e)}
-        ></input>
-        <button>Get Untitled by Id</button>
-      </form>
+        ></Form.Control>
+        <Button variant="dark" type="submit">Request your Untitled by Id</Button>
+        </Form.Group>
+      </Form>
       <br/>
-      <form onSubmit={(e) => mint(e)}>
-        <label htmlFor="title">Title:</label>
-        <textarea
-          id="title" name="title" rows="5" cols="50"
+      <Form onSubmit={(e) => mint(e)}>
+        <Form.Group>
+        <Form.Control
+          type="text" rows="5"
+          placeholder="Frankenstein Text's Title"
           onChange={e => updateTitle(e)}
-        ></textarea>
-        <button>Mint Frankenstein Text</button>
-      </form>
-      <p>{`Untitled Frankenstein Text: ${untitled}`}</p>
+        ></Form.Control>
+        <p>{`"${untitled}"`}</p>
+        <Button variant="dark" type="submit" size="lg">Title and Mint this Frankenstein Text!</Button>
+        </Form.Group>
+      </Form>
+      
       <br/>
-      <form onSubmit={(e) => getMintedCid(e)}>
-        <label htmlFor="mintedId">Minted Id:</label>
-        <input
-          id="mintedId" name="mintedId" type="number"
+      <Form onSubmit={(e) => getMintedCid(e)}>
+        <Form.Group>
+        <Form.Control
+          placeholder="Frankenstein Text NFT Id"
+          type="number"
           onChange={e => updateMintedId(e)}
-        ></input>
-        <button>Get CID by NFT Id</button>
-      </form>
+        ></Form.Control>
+        <Button variant="dark" type="submit">Get CID by NFT Id</Button>
+        </Form.Group>
+      </Form>
       <br/>
-    </div>
+    </Container>
   );
 }
 
