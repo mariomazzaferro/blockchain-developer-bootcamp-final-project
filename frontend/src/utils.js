@@ -1,8 +1,9 @@
 import Web3 from 'web3';
 import { NFTStorage } from 'nft.storage';
 import FrankieTexts from './contracts/FrankieTexts.json';
+require('dotenv').config();
 
-const apiKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDZGZDk4Qzg4MzU5YTRDNENBYjkwNDVhNGVlZTAxYWFhNDE2ODRGRWIiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTYzNDY4MjA0ODUzMywibmFtZSI6IlByaW1hIn0.cUwmpnPU9F8erl5xLg0AqSG0OQAqv0JGug0N5SHnU9w';
+const apiKey = process.env.REACT_APP_API_KEY;
 const client = new NFTStorage({ token: apiKey });
 
 const getWeb3 = () => {

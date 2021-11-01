@@ -25,7 +25,7 @@ const Home = () => {
 
       <h5>There are two ways to interact with the game:</h5>
 
-      <h5>1-Write: users request a random text to contribute, and have 2 hours to write and submit their contribution.</h5>
+      <h5>1-Write: users request a random text to contribute, and have 2 hours to write and submit their contribution. Each contribution is automatically separated with a double slash (//).</h5>
 
       <h5>2-Mint: users have access to their list of finalized Frankenstein Texts, which they have the right to title and mint only once during the entire week after the fifth contribution is submitted. The finalized Frankenstein Texts are called Untitled, because… well they have no title yet! You can access your Untitleds through their ids, which start from 0 (your first Untitled text) and increase until your most recent Untitled.</h5>
     </Container>

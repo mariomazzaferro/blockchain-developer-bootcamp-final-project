@@ -60,8 +60,8 @@ function App() {
   const submitText = async (oldCid, string) => {
     const newCid = await storeString(string);
     await contract.methods.submitText(oldCid, newCid).send({from: accounts[0], gas:3000000});
-    const sCounter = await contract.methods.submitCounter().call();
-    console.log(`Submit Counter: ${sCounter}`);
+    const sCounter = await contract.methods.submitCounter().call(); // delete
+    console.log(`Submit Counter: ${sCounter}`); // delete
   }
 
   const newestUntitledId = async () => {
@@ -86,6 +86,7 @@ function App() {
     const nftCidFromContract = res.events.MintedFrankie.returnValues[1];
     console.log(`frankieId: ${frankieId}`);
     console.log(`nftCidFromContract: ${nftCidFromContract}`);
+    return frankieId;
   }
 
   const seedPlot = async string => {
@@ -116,14 +117,16 @@ function App() {
     <Router>
       <Navbar bg="dark" variant={"dark"} expand="lg">
         <Container>
-          <Navbar.Brand><Nav.Link  as={Link} to={"/"} >Frankenstein Texts</Nav.Link></Navbar.Brand>
+          <Navbar.Brand>
+            <Nav.Link  as={Link} to={"/"} style={{color: "greenyellow"}}>Frankenstein Texts</Nav.Link>
+          </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-          <Nav.Link  as={Link} to={"/write"}>Write</Nav.Link>
-          <Nav.Link  as={Link} to={"/mint"}>Mint</Nav.Link>
+          <Nav.Link  as={Link} to={"/write"} style={{color: "greenyellow"}}>Write</Nav.Link>
+          <Nav.Link  as={Link} to={"/mint"} style={{color: "greenyellow"}}>Mint</Nav.Link>
           { accounts[0] === victor &&
-            <Nav.Link as={Link} to={"/seedplot"}>Seed Plot</Nav.Link>
+            <Nav.Link as={Link} to={"/seedplot"} style={{color: "greenyellow"}}>Seed Plot</Nav.Link>
           }
           </Nav>
           </Navbar.Collapse>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import axios from 'axios';
 import { Container, Button, Form } from 'react-bootstrap';
 
@@ -9,6 +9,8 @@ const Mint = ({ mintFrankie, requestUntitled, mintedCidById, newestUntitledId, r
   const [untitledCid, setUntitledCid] = useState(undefined);
   const [title, setTitle] = useState(undefined);
   const [mintedId, setMintedId] = useState(undefined);
+  const [timeLeft, setTimeLeft] = useState(undefined);
+  const formRef = useRef(null);
 
   const requestNewestUnId = async () => {
     const newestUnId = await newestUntitledId();
@@ -30,6 +32,8 @@ const Mint = ({ mintFrankie, requestUntitled, mintedCidById, newestUntitledId, r
     setUntitled(blob.data);
     console.log(`Untitled Received:${blob.data}`);
     const endedSince = await requestUntitledEndedSince(unId);
+    const timeLeft = 10080 - (endedSince/60);
+    setTimeLeft(timeLeft);
     console.log(`Untitled Received Ended Since:${endedSince}`);
   }
 
@@ -37,7 +41,11 @@ const Mint = ({ mintFrankie, requestUntitled, mintedCidById, newestUntitledId, r
     e.preventDefault();
     console.log('Minted!');
     const newFrankie = title + ': ' + untitled;
-    mintFrankie(untitledCid, newFrankie, unId);
+    const frankieId = await mintFrankie(untitledCid, newFrankie, unId);
+    setUntitled(undefined);
+    setTimeLeft(undefined);
+    formRef.current.reset();
+    alert(`Frankenstein Text minted successfully! NFT Id: ${frankieId}`);
   }
 
   const updateTitle = (e) => {
@@ -59,9 +67,9 @@ const Mint = ({ mintFrankie, requestUntitled, mintedCidById, newestUntitledId, r
   return (
     <Container>
       <br/>
-      <Button variant="dark" onClick={() => requestNewestUnId()}>Get your newest Untitled Id</Button>
+      <Button variant="dark" onClick={() => requestNewestUnId()} style={{color: "greenyellow"}}>Get your newest Untitled Id</Button>
       <br/>
-      <h5>{`Your newest Untitled Id: ${newestUnId}`}</h5>
+      <h5>{newestUnId && `Your newest Untitled Id: ${newestUnId}`}</h5>
       <Form onSubmit={(e) => requestUn(e)}>
         <Form.Group>
         <Form.Control
@@ -69,19 +77,20 @@ const Mint = ({ mintFrankie, requestUntitled, mintedCidById, newestUntitledId, r
           placeholder="Untitled Id"
           onChange={e => updateUnId(e)}
         ></Form.Control>
-        <Button variant="dark" type="submit">Request your Untitled by Id</Button>
+        <Button variant="dark" type="submit" style={{color: "greenyellow"}}>Request your Untitled by Id</Button>
         </Form.Group>
       </Form>
       <br/>
-      <Form onSubmit={(e) => mint(e)}>
+      <Form ref={formRef} onSubmit={(e) => mint(e)}>
         <Form.Group>
         <Form.Control
           type="text" rows="5"
           placeholder="Frankenstein Text's Title"
           onChange={e => updateTitle(e)}
         ></Form.Control>
-        <p>{`"${untitled}"`}</p>
-        <Button variant="dark" type="submit" size="lg">Title and Mint this Frankenstein Text!</Button>
+        <h5>{untitled && `UNTITLED TEXT:"${untitled}"`}</h5>
+        <p>{timeLeft && `Time left for minting: ${parseFloat(timeLeft).toFixed(2)} minutes`}</p>
+        <Button variant="dark" type="submit" size="lg" style={{color: "greenyellow"}}>Title and Mint this Frankenstein Text!</Button>
         </Form.Group>
       </Form>
       
@@ -93,7 +102,7 @@ const Mint = ({ mintFrankie, requestUntitled, mintedCidById, newestUntitledId, r
           type="number"
           onChange={e => updateMintedId(e)}
         ></Form.Control>
-        <Button variant="dark" type="submit">Get CID by NFT Id</Button>
+        <Button variant="dark" type="submit" style={{color: "greenyellow"}}>Get CID by NFT Id</Button>
         </Form.Group>
       </Form>
       <br/>

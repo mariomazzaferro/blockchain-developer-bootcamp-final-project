@@ -8,7 +8,7 @@ For the Final Project I wish to implement a version of this game on the blockcha
 
 The Frankenstein Text will have a fixed number of 5 co-writers. There will be a 2 hours deadline for each individual contribution.
 
-As a writer, you will be given a random text to contribute, it might be a text with already some contributions or even the opportunity to start a text from scratch. After all 5 contributions are concluded, for a week each co-writer has the opportunity to title and mint the text as a unique NFT.
+As a writer, you will be given a random text to contribute, it might be a text with already some contributions or even the opportunity to start a text from scratch. After all 5 contributions are concluded, for only a week, each co-writer has the opportunity to title and mint the text as a unique NFT.
 
 The Frankenstein Text NFT will have a number of mints associated to it, ranging from 1 to 5, which will represent the number of co-writers that minted the text. One would assume that a higher number of mints indicates a higher quality of text, since more contributors thought the text was interesting enough to mint.
 
