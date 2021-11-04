@@ -25,7 +25,7 @@ function App() {
       const web3 = await getWeb3();
       const accounts = await web3.eth.getAccounts();
       const contract = await getContract(web3);
-      const victor = await contract.methods.victor().call();
+      const victor = await contract.methods.owner().call();
       setWeb3(web3);
       setAccounts(accounts);
       setContract(contract);
