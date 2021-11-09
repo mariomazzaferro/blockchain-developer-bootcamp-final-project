@@ -19,7 +19,7 @@ const Home = () => {
 
       <br/>
 
-      <h5>Each text has a fixed amount of 5 co-writers, and each one of them will have 2 hours to write their contribution.</h5>
+      <h5>Each text has a fixed amount of 3 co-writers, and each one of them will have 2 hours to write their contribution.</h5>
 
       <br/>
 
@@ -28,16 +28,16 @@ const Home = () => {
       <br/>
 
       <Container>
-      <h5>1-Write: users request a random text to contribute, and have 2 hours to write and submit their contribution. Each contribution is automatically separated with a double slash (//), so be aware, you might have to conclude the text if you are the 5th co-writer.</h5>
+      <h5>1-Write: users request a random text to contribute, and have 2 hours to write and submit their contribution. Each contribution is automatically separated with a double slash (//), so be aware, you might have to conclude the text if you are the 3rd co-writer.</h5>
 
       <br/>
 
-      <h5>2-Mint: users have access to their list of finalized Frankenstein Texts, which they have the right to title and mint only once during the entire week after the fifth contribution is submitted. The finalized Frankenstein Texts are called Untitled, because… well they have no title yet! You can access your Untitleds through their ids, which start from 0 (your first Untitled text) and increase until your most recent Untitled.</h5>
+      <h5>2-Mint: users have access to their list of finalized Frankenstein Texts, which they have the right to title and mint only once during the entire week after the 3rd contribution is submitted. The finalized Frankenstein Texts are called Untitled, because… well they have no title yet! You can access your Untitleds through their ids, which start from 0 (your first Untitled text) and increase until your most recent Untitled.</h5>
       </Container>
 
       <br/>
 
-      <h5>Lastly, each minted Frankenstein Text NFT has a number of stars, ranging from 1 to 5, which represent the number of co-writers that minted the text. You can roughly assume that a higher number of mints indicates a higher quality of text, since more contributors thought it was interesting enough to mint.</h5>
+      <h5>Lastly, each minted Frankenstein Text NFT has a number of stars, ranging from 1 to 3, which represent the number of co-writers that minted the text. You can roughly assume that a higher number of mints indicates a higher quality of text, since more contributors thought it was interesting enough to mint.</h5>
 
       <br/>
 

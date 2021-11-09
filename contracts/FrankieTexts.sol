@@ -77,13 +77,6 @@ contract FrankieTexts is ERC721, Ownable {
         frankieId = 0;
     }
 
-    /// @dev Guarantees that the submitText() caller had previously received that CID less than 2 hours ago.
-    modifier isValid(string calldata oldCid) {
-        require(keccak256(abi.encodePacked(editing[msg.sender].cid)) == keccak256(abi.encodePacked(oldCid)));
-        require(editing[msg.sender].editSince + 2 hours > block.timestamp);
-        _;
-    }
-
     /// @dev Updates Frankenstein Text data stored in Frankie struct.
     function _updateFrankie(string calldata newCid, string calldata oldCid) private {
         frankies[newCid] = frankies[oldCid];
@@ -97,7 +90,7 @@ contract FrankieTexts is ERC721, Ownable {
     /// @dev Else: feeds the next CID in the cidOrder cue.
     function _endFrankie(string calldata newCid) private {
       frankies[newCid].endedSince = block.timestamp;
-      for (uint256 i = 0; i < 5; i++) {
+      for (uint256 i = 0; i < 3; i++) {
         untitledTexts[frankies[newCid].writers[i]].push(newCid);
       }
       if(!plotEnded[frankies[newCid].cids[0]]) {
@@ -126,9 +119,11 @@ contract FrankieTexts is ERC721, Ownable {
     /// @dev If the Frankie has 5 contributions: finalizes Frankenstein Text.
     /// @dev Else: sets newCid in the end of cidOrder cue and if it's the first submited
     /// @dev ramification of oldCid: substitutes it (in the deck) with the first CID of cidOrder cue.
-    function submitText(string calldata oldCid, string calldata newCid) external isValid(oldCid) {
+    function submitText(string calldata oldCid, string calldata newCid) external {
+      require(editing[msg.sender].editSince + 2 hours > block.timestamp);
+      require(keccak256(abi.encodePacked(editing[msg.sender].cid)) == keccak256(abi.encodePacked(oldCid)));
       _updateFrankie(newCid, oldCid);
-      if (frankies[newCid].writers.length == 5) {
+      if (frankies[newCid].writers.length == 3) {
         _endFrankie(newCid);
       } else {
         cidOrder[submitCounter] = newCid;
