@@ -34,19 +34,19 @@ function App() {
       // for(let i=0; i < 11; i++) {
       //   console.log(`Iteration:${i}`);
       //   const cid = await storeString(`//PlotNumber:${i}`);
-      //   await contract.methods.seedPlot(cid).send({from: accounts[0], gas:3000000});
+      //   await contract.methods.seedPlot(cid).send({from: accounts[0] });
       //   const sCounter = await contract.methods.submitCounter().call();
       //   const dCounter = await contract.methods.deckCounter().call();
       //   console.log(`Submit Counter: ${sCounter}`);
       //   console.log(`Deck Counter: ${dCounter}`);
       // };
+    
     };
-
     init();
   }, []);
 
   const requestText = async () => {
-    const cid = await contract.methods.requestText().send({from: accounts[0], gas:3000000});
+    const cid = await contract.methods.requestText().send({from: accounts[0] });
     return cid;
   }
 
@@ -59,7 +59,7 @@ function App() {
 
   const submitText = async (oldCid, string) => {
     const newCid = await storeString(string);
-    await contract.methods.submitText(oldCid, newCid).send({from: accounts[0], gas:3000000});
+    await contract.methods.submitText(oldCid, newCid).send({from: accounts[0] });
     const sCounter = await contract.methods.submitCounter().call(); // delete
     console.log(`Submit Counter: ${sCounter}`); // delete
   }
@@ -81,7 +81,7 @@ function App() {
 
   const mintFrankie = async (untitledCid, newFrankie, unId) => {
     const nftCid = await storeString(newFrankie);
-    const res = await contract.methods.mintFrankie(untitledCid, nftCid, unId).send({from: accounts[0], gas:3000000});
+    const res = await contract.methods.mintFrankie(untitledCid, nftCid, unId).send({from: accounts[0]});
     const frankieId = res.events.MintedFrankie.returnValues[0];
     const nftCidFromContract = res.events.MintedFrankie.returnValues[1];
     console.log(`frankieId: ${frankieId}`);
@@ -91,7 +91,7 @@ function App() {
 
   const seedPlot = async string => {
     const cid = await storeString(string);
-    await contract.methods.seedPlot(cid).send({from: accounts[0], gas:3000000});
+    await contract.methods.seedPlot(cid).send({from: accounts[0] });
     const sCounter = await contract.methods.submitCounter().call();
     console.log(`Submit Counter: ${sCounter}`);
   };

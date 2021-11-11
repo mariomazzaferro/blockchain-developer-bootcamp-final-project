@@ -3,7 +3,7 @@ const FrankieTexts = artifacts.require('FrankieTexts');
 contract('FrankieTexts', (accounts) => {
   let frankieTexts;
   beforeEach(async () => {
-    frankieTexts = await FrankieTexts.new();
+    frankieTexts = await FrankieTexts.new(10);
   });
 
   it('Should have correct initial values', async () => {

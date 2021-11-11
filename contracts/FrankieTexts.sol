@@ -68,13 +68,13 @@ contract FrankieTexts is ERC721, Ownable {
     mapping(string => bool) private plotEnded;
 
     /// @dev Sets initial values.
-    constructor() ERC721("Frankies", "FKE") {
+    constructor(uint _deckSize) ERC721("Frankies", "FKE") {
         requestCounter = 0;
         feedCounter = 0;
         submitCounter = 0;
         deckCounter = 0;
-        deckSize = 10;
         frankieId = 0;
+        deckSize = _deckSize;
     }
 
     /// @dev Updates Frankenstein Text data stored in Frankie struct.
@@ -94,7 +94,7 @@ contract FrankieTexts is ERC721, Ownable {
         untitledTexts[frankies[newCid].writers[i]].push(newCid);
       }
       if(!plotEnded[frankies[newCid].cids[0]]) {
-        string memory startCid = string(abi.encodePacked(newCid, '00000'));
+        string memory startCid = string(abi.encodePacked(newCid, '000'));
         string[] memory cids;
         address[] memory writers;
         frankies[startCid] = Frankie(cids, writers, 0);
