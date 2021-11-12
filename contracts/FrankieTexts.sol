@@ -30,7 +30,7 @@ contract FrankieTexts is ERC721, Ownable {
     event RequestedText(string chosenCid, uint256 writerNumber, address requester);
 
     /// @dev Fired upon mintFrankie() call.
-    event MintedFrankie(uint indexed nftId, string nftCid, string indexed fifthCid);
+    event MintedFrankie(uint nftId, string nftCid, string indexed thirdCid);
 
     /// @dev Stores data of a Frankenstein Text.
     struct Frankie {
