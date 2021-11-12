@@ -27,7 +27,7 @@ contract FrankieTexts is ERC721, Ownable {
     uint256 public frankieId;
 
     /// @dev Fired upon requestText() call.
-    event RequestedText(string chosenCid, address requester);
+    event RequestedText(string chosenCid, uint256 writerNumber, address requester);
 
     /// @dev Fired upon mintFrankie() call.
     event MintedFrankie(uint indexed nftId, string nftCid, string indexed fifthCid);
@@ -36,7 +36,6 @@ contract FrankieTexts is ERC721, Ownable {
     struct Frankie {
       string[] cids;
       address[] writers;
-      uint256 endedSince;
     }
 
     /// @dev Stores temporary data of a Frankenstein Text being edited.
@@ -89,7 +88,6 @@ contract FrankieTexts is ERC721, Ownable {
     /// @dev If it's the first ramification of that plot to finish: feeds a blank plot CID.
     /// @dev Else: feeds the next CID in the cidOrder cue.
     function _endFrankie(string calldata newCid) private {
-      frankies[newCid].endedSince = block.timestamp;
       for (uint256 i = 0; i < 3; i++) {
         untitledTexts[frankies[newCid].writers[i]].push(newCid);
       }
@@ -97,7 +95,7 @@ contract FrankieTexts is ERC721, Ownable {
         string memory startCid = string(abi.encodePacked(newCid, '000'));
         string[] memory cids;
         address[] memory writers;
-        frankies[startCid] = Frankie(cids, writers, 0);
+        frankies[startCid] = Frankie(cids, writers);
         deck[editing[msg.sender].deckNumber] = startCid;
         plotEnded[frankies[newCid].cids[0]] = true;
       } else {
@@ -112,7 +110,7 @@ contract FrankieTexts is ERC721, Ownable {
       uint256 random = uint256(keccak256(abi.encodePacked(msg.sender, block.difficulty, cidOrder[feedCounter], cidOrder[submitCounter], requestCounter))) % deckSize;
       unchecked { requestCounter++; }
       editing[msg.sender] = MiniFrankie(deck[random], block.timestamp, random);
-      emit RequestedText(deck[random], msg.sender);
+      emit RequestedText(deck[random], frankies[deck[random]].writers.length, msg.sender);
     }
 
     /// @dev Updates Frankenstein Text data through _updateFrankie().
@@ -139,7 +137,6 @@ contract FrankieTexts is ERC721, Ownable {
     /// @dev Updates Frankenstein Text data through _updateFrankie().
     /// @dev Mints Frankenstein Text NFT and delete respective untitled from untitledTexts.
     function mintFrankie(string calldata oldCid, string calldata newCid, uint untitledId) external {
-        require(frankies[oldCid].endedSince + 7 days > block.timestamp);
         require(keccak256(abi.encodePacked(oldCid)) == keccak256(abi.encodePacked(untitledTexts[msg.sender][untitledId])));
         _updateFrankie(newCid, oldCid);
         _safeMint(msg.sender, frankieId);
@@ -166,12 +163,6 @@ contract FrankieTexts is ERC721, Ownable {
         return untitledTexts[msg.sender][untitledId];
     }
 
-    /// @dev Returns seconds passed since 5th contribution of the 
-    /// @dev untitledTexts[msg.sender][untitledId].
-    function requestUntitledEndedSince(uint untitledId) external view returns(uint) {
-        return (block.timestamp - frankies[untitledTexts[msg.sender][untitledId]].endedSince);
-    }
-
     /// @dev Checks if the caller is victor.
     /// @dev Creates an new Frankie with the cid parameter.
     /// @dev If the deck is incomplete: feeds cid into deck.
@@ -179,7 +170,7 @@ contract FrankieTexts is ERC721, Ownable {
     function seedPlot(string calldata cid) external onlyOwner() {
         string[] memory cids;
         address[] memory writers;
-        frankies[cid] = Frankie(cids, writers, 0);
+        frankies[cid] = Frankie(cids, writers);
         frankies[cid].cids.push(cid);
         frankies[cid].writers.push(msg.sender);
         if(deckCounter < deckSize) {

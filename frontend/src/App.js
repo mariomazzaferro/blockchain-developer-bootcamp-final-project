@@ -33,7 +33,7 @@ function App() {
 
       // for(let i=0; i < 11; i++) {
       //   console.log(`Iteration:${i}`);
-      //   const cid = await storeString(`//PlotNumber:${i}`);
+      //   const cid = await storeString(`PlotNumber:${i}`);
       //   await contract.methods.seedPlot(cid).send({from: accounts[0] });
       //   const sCounter = await contract.methods.submitCounter().call();
       //   const dCounter = await contract.methods.deckCounter().call();
@@ -72,11 +72,6 @@ function App() {
   const requestUntitled = async id => {
     const untitled = await contract.methods.requestUntitledText(id).call({from: accounts[0]});
     return untitled;
-  }
-
-  const requestUntitledEndedSince = async id => {
-    const endedSince = await contract.methods.requestUntitledEndedSince(id).call({from: accounts[0]});
-    return endedSince;
   }
 
   const mintFrankie = async (untitledCid, newFrankie, unId) => {
@@ -140,7 +135,7 @@ function App() {
             <Write requestText={requestText} submitText={submitText} />
           </Route>
           <Route exact path="/mint">
-            <Mint requestUntitled={requestUntitled} newestUntitledId={newestUntitledId} mintFrankie={mintFrankie} mintedCidById={mintedCidById} requestUntitledEndedSince={requestUntitledEndedSince} />
+            <Mint requestUntitled={requestUntitled} newestUntitledId={newestUntitledId} mintFrankie={mintFrankie} mintedCidById={mintedCidById} />
           </Route>
           { accounts[0] === victor &&
             <Route exact path="/seedplot">

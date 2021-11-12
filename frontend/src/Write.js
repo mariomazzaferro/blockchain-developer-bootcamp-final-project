@@ -5,6 +5,7 @@ import { Container, Button, Form, Card } from 'react-bootstrap';
 const Write = ({requestText, submitText}) => {
   const [text, setText] = useState(undefined);
   const [cid, setCid] = useState(undefined);
+  const [writerNumber, setWriterNumber] = useState(undefined);
   const [initialText, setInitialText] = useState(undefined);
   const [isPlot, setIsPlot] = useState(false);
   const formRef = useRef(null);
@@ -12,7 +13,10 @@ const Write = ({requestText, submitText}) => {
   const request = async () => {
     const res = await requestText();
     const randCid = res.events.RequestedText.returnValues[0];
+    const writerNumber = res.events.RequestedText.returnValues[1];
     console.log(`randCid:${randCid}`);
+    console.log(`writerNumber:${writerNumber}`);
+    setWriterNumber(writerNumber);
     setCid(randCid);
     if(!randCid.includes('000')) { 
       const blob = await axios.get(`https://ipfs.io/ipfs/${randCid}`);
@@ -29,8 +33,9 @@ const Write = ({requestText, submitText}) => {
     e.preventDefault();
     console.log('Submited!');
     const oldCid = cid;
-    const newText = initialText + '// ' + text;
+    const newText = initialText + " " + text;
     await submitText(oldCid, newText);
+    setWriterNumber(undefined);
     setInitialText(undefined);
     setIsPlot(false);
     formRef.current.reset();
@@ -51,6 +56,9 @@ const Write = ({requestText, submitText}) => {
         <Button variant="dark" onClick={request} style={{color: "greenyellow"}}>Request Text</Button>
         <br/>
         <br/>
+        <p style={{color: "lightgray"}}>{writerNumber === "0" && "First Contribution"}</p>
+        <p style={{color: "lightgray"}}>{writerNumber === "1" && "Second Contribution"}</p>
+        <p style={{color: "lightgray"}}>{writerNumber === "2" && "Third Contribution"}</p>
         <h5>{isPlot && `You lucky bastard! You get the chance to start a new Frankenstein Text from scratch!`}</h5>
         <p style={{color: "lightgray"}}>{initialText && `text:`}</p>
         <h5>{initialText && `"${initialText}"`}</h5>
