@@ -58,14 +58,14 @@ contract('FrankieTexts', (accounts) => {
     let scBefore = await frankieTexts.submitCounter();
     let fcBefore = await frankieTexts.feedCounter();
 
-    let res = await frankieTexts.requestText();
-    await frankieTexts.submitText(`${res.logs[0].args['0']}`,`C:${res.logs[0].args['0']}`);
+    let res = await frankieTexts.requestCid();
+    await frankieTexts.submitCid(`${res.logs[0].args['0']}`,`C:${res.logs[0].args['0']}`);
 
     let scAfter1 = await frankieTexts.submitCounter();
     let fcAfter1 = await frankieTexts.feedCounter();
 
-    res = await frankieTexts.requestText();
-    await frankieTexts.submitText(`${res.logs[0].args['0']}`,`C:${res.logs[0].args['0']}`);
+    res = await frankieTexts.requestCid();
+    await frankieTexts.submitCid(`${res.logs[0].args['0']}`,`C:${res.logs[0].args['0']}`);
 
     let scAfter2 = await frankieTexts.submitCounter();
     let fcAfter2 = await frankieTexts.feedCounter();
@@ -86,20 +86,20 @@ contract('FrankieTexts', (accounts) => {
     let frankieId0 = await frankieTexts.frankieId();
 
     for(let i=0; i < 40; i++) {
-      let res = await frankieTexts.requestText();
-      await frankieTexts.submitText(`${res.logs[0].args['0']}`,`C:${res.logs[0].args['0']}`);
+      let res = await frankieTexts.requestCid();
+      await frankieTexts.submitCid(`${res.logs[0].args['0']}`,`C:${res.logs[0].args['0']}`);
       console.log(res.logs[0].args['0']);
     };
 
     let newestUntitledId = await frankieTexts.requestNewestUntitledId();
-    let newestUntitledText = await frankieTexts.requestUntitledText(newestUntitledId);
-    await frankieTexts.mintFrankie(newestUntitledText,`Title1`, newestUntitledId);
+    let newestUntitledCid = await frankieTexts.requestUntitledCid(newestUntitledId);
+    await frankieTexts.mintFrankie(newestUntitledCid,`Title1`, newestUntitledId);
 
     let frankieId1 = await frankieTexts.frankieId();
 
     let secondUntitledId = newestUntitledId-1;
-    let secondUntitledText = await frankieTexts.requestUntitledText(secondUntitledId);
-    await frankieTexts.mintFrankie(secondUntitledText,`Title2`, secondUntitledId);
+    let secondUntitledCid = await frankieTexts.requestUntitledCid(secondUntitledId);
+    await frankieTexts.mintFrankie(secondUntitledCid,`Title2`, secondUntitledId);
 
     let frankieId2 = await frankieTexts.frankieId();
     

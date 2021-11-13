@@ -4,17 +4,17 @@ pragma solidity 0.8.0;
 import "../node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 
-/// @title A Frankenstein Texts writing game
+/// @title A writing game
 /// @author Mario Mazzaferro
 contract FrankieTexts is ERC721, Ownable {
 
-    /// @dev Keeps track of the number of requestText() calls.
+    /// @dev Keeps track of the number of requestCid() calls.
     uint256 private requestCounter;
 
     /// @dev Keeps track of the number of CIDs fed in the deck mapping.
     uint256 public feedCounter;
 
-    /// @dev Keeps track of the number of valid submitText() calls.
+    /// @dev Keeps track of the number of valid submitCid() calls.
     uint256 public submitCounter;
 
     /// @dev Keeps track of the number of plots seeded in the deck.
@@ -27,7 +27,7 @@ contract FrankieTexts is ERC721, Ownable {
     uint256 public frankieId;
 
     /// @dev Fired upon requestText() call.
-    event RequestedText(string chosenCid, uint256 writerNumber, address requester);
+    event RequestedCid(string chosenCid, uint256 writerNumber, address requester);
 
     /// @dev Fired upon mintFrankie() call.
     event MintedFrankie(uint nftId, string nftCid, string indexed thirdCid);
@@ -54,17 +54,20 @@ contract FrankieTexts is ERC721, Ownable {
     /// @dev Relates writer address and current editing Frankenstein Text.
     mapping(address => MiniFrankie) private editing;
 
-    /// @dev Ordered IPFS CIDs that will be pseudo-randomly returned by requestText().
+    /// @dev Ordered IPFS CIDs that will be pseudo-randomly returned by requestCid().
     mapping(uint256 => string) private deck;
 
     /// @dev Relates writer address with its list of finished untitled Frankenstein Text's CIDs.
-    mapping(address => string[]) private untitledTexts;
+    mapping(address => string[]) private untitledCids;
 
     /// @dev Relates frankieId with its respective IPFS CID.
     mapping(uint256 => string) private mintedCids;
 
     /// @dev Keeps track of plots that have had at least one ramification finished.
     mapping(string => bool) private plotEnded;
+
+    /// @dev Keeps track of 3rd CID's star number.
+    mapping(string => uint) private stars;
 
     /// @dev Sets initial values.
     constructor(uint _deckSize) ERC721("Frankies", "FKE") {
@@ -89,7 +92,7 @@ contract FrankieTexts is ERC721, Ownable {
     /// @dev Else: feeds the next CID in the cidOrder cue.
     function _endFrankie(string calldata newCid) private {
       for (uint256 i = 0; i < 3; i++) {
-        untitledTexts[frankies[newCid].writers[i]].push(newCid);
+        untitledCids[frankies[newCid].writers[i]].push(newCid);
       }
       if(!plotEnded[frankies[newCid].cids[0]]) {
         string memory startCid = string(abi.encodePacked(newCid, '000'));
@@ -106,18 +109,18 @@ contract FrankieTexts is ERC721, Ownable {
 
     /// @dev Draws a pseudo-random CID from deck mapping.
     /// @dev Sets pseudo-random CID to msg.sender in editing mapping.
-    function requestText() external {
+    function requestCid() external {
       uint256 random = uint256(keccak256(abi.encodePacked(msg.sender, block.difficulty, cidOrder[feedCounter], cidOrder[submitCounter], requestCounter))) % deckSize;
       unchecked { requestCounter++; }
       editing[msg.sender] = MiniFrankie(deck[random], block.timestamp, random);
-      emit RequestedText(deck[random], frankies[deck[random]].writers.length, msg.sender);
+      emit RequestedCid(deck[random], frankies[deck[random]].writers.length, msg.sender);
     }
 
     /// @dev Updates Frankenstein Text data through _updateFrankie().
     /// @dev If the Frankie has 5 contributions: finalizes Frankenstein Text.
     /// @dev Else: sets newCid in the end of cidOrder cue and if it's the first submited
     /// @dev ramification of oldCid: substitutes it (in the deck) with the first CID of cidOrder cue.
-    function submitText(string calldata oldCid, string calldata newCid) external {
+    function submitCid(string calldata oldCid, string calldata newCid) external {
       require(editing[msg.sender].editSince + 2 hours > block.timestamp);
       require(keccak256(abi.encodePacked(editing[msg.sender].cid)) == keccak256(abi.encodePacked(oldCid)));
       _updateFrankie(newCid, oldCid);
@@ -135,32 +138,44 @@ contract FrankieTexts is ERC721, Ownable {
 
     /// @dev Checks if the untitled Frankenstein Text is still valid and is owned by the caller.
     /// @dev Updates Frankenstein Text data through _updateFrankie().
-    /// @dev Mints Frankenstein Text NFT and delete respective untitled from untitledTexts.
+    /// @dev Mints Frankenstein Text NFT and delete respective untitled from untitledCids.
     function mintFrankie(string calldata oldCid, string calldata newCid, uint untitledId) external {
-        require(keccak256(abi.encodePacked(oldCid)) == keccak256(abi.encodePacked(untitledTexts[msg.sender][untitledId])));
+        require(keccak256(abi.encodePacked(oldCid)) == keccak256(abi.encodePacked(untitledCids[msg.sender][untitledId])));
         _updateFrankie(newCid, oldCid);
         _safeMint(msg.sender, frankieId);
-        delete untitledTexts[msg.sender][untitledId];
+        delete untitledCids[msg.sender][untitledId];
         mintedCids[frankieId] = newCid;
+        stars[oldCid]++;
         emit MintedFrankie(frankieId, newCid, oldCid);
         frankieId++;
     }
 
-    /// @dev Returns NFT CID corresponding to the id parameter.
-    function mintedCidById(uint id) external view returns(string memory) {
-      require(id < frankieId);
-      return mintedCids[id];
+    /// @dev Returns NFT CID corresponding to the nftId parameter.
+    function mintedCidById(uint nftId) external view returns(string memory) {
+      require(nftId < frankieId);
+      return mintedCids[nftId];
     }
 
-    /// @dev Returns newest untitled text id for the caller.
+    /// @dev Returns NFT stars corresponding to the nftId parameter.
+    function starsById(uint nftId) external view returns(uint) {
+      require(nftId < frankieId);
+      return stars[frankies[mintedCids[nftId]].cids[2]];
+    }
+
+    /// @dev Returns newest untitledCid id for the caller.
     function requestNewestUntitledId() external view returns(uint) {
-        require(untitledTexts[msg.sender].length > 0);
-        return untitledTexts[msg.sender].length - 1;
+        require(untitledCids[msg.sender].length > 0);
+        return untitledCids[msg.sender].length - 1;
     }
 
-    /// @dev Returns caller's untitled CID with the id of the untitledId parameter.
-    function requestUntitledText(uint untitledId) external view returns(string memory) {
-        return untitledTexts[msg.sender][untitledId];
+    /// @dev Returns caller's untitled CID for that specific untitledId.
+    function requestUntitledCid(uint untitledId) external view returns(string memory) {
+        return untitledCids[msg.sender][untitledId];
+    }
+
+    /// @dev Returns caller's untitled stars for that specific untitledId.
+    function requestUntitledStars(uint untitledId) external view returns(uint) {
+        return stars[untitledCids[msg.sender][untitledId]];
     }
 
     /// @dev Checks if the caller is victor.

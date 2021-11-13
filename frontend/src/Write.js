@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import axios from 'axios';
 import { Container, Button, Form, Card } from 'react-bootstrap';
 
-const Write = ({requestText, submitText}) => {
+const Write = ({requestCid, submitCid}) => {
   const [text, setText] = useState(undefined);
   const [cid, setCid] = useState(undefined);
   const [writerNumber, setWriterNumber] = useState(undefined);
@@ -11,9 +11,9 @@ const Write = ({requestText, submitText}) => {
   const formRef = useRef(null);
 
   const request = async () => {
-    const res = await requestText();
-    const randCid = res.events.RequestedText.returnValues[0];
-    const writerNumber = res.events.RequestedText.returnValues[1];
+    const res = await requestCid();
+    const randCid = res.events.RequestedCid.returnValues[0];
+    const writerNumber = res.events.RequestedCid.returnValues[1];
     console.log(`randCid:${randCid}`);
     console.log(`writerNumber:${writerNumber}`);
     setWriterNumber(writerNumber);
@@ -33,8 +33,8 @@ const Write = ({requestText, submitText}) => {
     e.preventDefault();
     console.log('Submited!');
     const oldCid = cid;
-    const newText = initialText + " " + text;
-    await submitText(oldCid, newText);
+    const newText = initialText + "// " + text;
+    await submitCid(oldCid, newText);
     setWriterNumber(undefined);
     setInitialText(undefined);
     setIsPlot(false);
@@ -54,7 +54,6 @@ const Write = ({requestText, submitText}) => {
       <Card.Body>
         <Card.Title>
         <Button variant="dark" onClick={request} style={{color: "greenyellow"}}>Request Text</Button>
-        <br/>
         <br/>
         <p style={{color: "lightgray"}}>{writerNumber === "0" && "First Contribution"}</p>
         <p style={{color: "lightgray"}}>{writerNumber === "1" && "Second Contribution"}</p>

@@ -12,6 +12,7 @@ import Home from './Home.js';
 import Write from './Write.js';
 import Mint from './Mint.js';
 import SeedPlot from './SeedPlot.js';
+import Feed from './Feed.js';
 import metamaskLogo from './metamask.png';
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
   const [accounts, setAccounts] = useState(undefined);
   const [contract, setContract] = useState(undefined);
   const [victor, setVictor] = useState(undefined);
+  const [frankieId, setFrankieId] = useState(undefined);
 
   useEffect(() => {
     const init = async () => {
@@ -26,14 +28,16 @@ function App() {
       const accounts = await web3.eth.getAccounts();
       const contract = await getContract(web3);
       const victor = await contract.methods.owner().call();
+      const frankieId = await contract.methods.frankieId().call();
       setWeb3(web3);
       setAccounts(accounts);
       setContract(contract);
       setVictor(victor);
+      setFrankieId(frankieId);
 
       // for(let i=0; i < 11; i++) {
       //   console.log(`Iteration:${i}`);
-      //   const cid = await storeString(`PlotNumber:${i}`);
+      //   const cid = await storeString(`PlotNumber${i}`);
       //   await contract.methods.seedPlot(cid).send({from: accounts[0] });
       //   const sCounter = await contract.methods.submitCounter().call();
       //   const dCounter = await contract.methods.deckCounter().call();
@@ -45,8 +49,8 @@ function App() {
     init();
   }, []);
 
-  const requestText = async () => {
-    const cid = await contract.methods.requestText().send({from: accounts[0] });
+  const requestCid = async () => {
+    const cid = await contract.methods.requestCid().send({from: accounts[0] });
     return cid;
   }
 
@@ -57,9 +61,9 @@ function App() {
     return cid;
   };
 
-  const submitText = async (oldCid, string) => {
+  const submitCid = async (oldCid, string) => {
     const newCid = await storeString(string);
-    await contract.methods.submitText(oldCid, newCid).send({from: accounts[0] });
+    await contract.methods.submitCid(oldCid, newCid).send({from: accounts[0] });
     const sCounter = await contract.methods.submitCounter().call(); // delete
     console.log(`Submit Counter: ${sCounter}`); // delete
   }
@@ -70,8 +74,13 @@ function App() {
   } 
 
   const requestUntitled = async id => {
-    const untitled = await contract.methods.requestUntitledText(id).call({from: accounts[0]});
+    const untitled = await contract.methods.requestUntitledCid(id).call({from: accounts[0]});
     return untitled;
+  }
+
+  const requestUntitledStars = async id => {
+    const stars = await contract.methods.requestUntitledStars(id).call({from: accounts[0]});
+    return stars;
   }
 
   const mintFrankie = async (untitledCid, newFrankie, unId) => {
@@ -94,6 +103,11 @@ function App() {
   const mintedCidById = async mintedId => {
     const mintedCid = await contract.methods.mintedCidById(mintedId).call();
     return mintedCid;
+  };
+
+  const starsById = async mintedId => {
+    const stars = await contract.methods.starsById(mintedId).call();
+    return stars;
   };
 
   if(
@@ -120,6 +134,7 @@ function App() {
           <Nav className="me-auto">
           <Nav.Link  as={Link} to={"/write"} style={{color: "greenyellow"}}>Write</Nav.Link>
           <Nav.Link  as={Link} to={"/mint"} style={{color: "greenyellow"}}>Mint</Nav.Link>
+          <Nav.Link  as={Link} to={"/feed"} style={{color: "greenyellow"}}>Feed</Nav.Link>
           { accounts[0] === victor &&
             <Nav.Link as={Link} to={"/seedplot"} style={{color: "greenyellow"}}>Seed Plot</Nav.Link>
           }
@@ -132,10 +147,13 @@ function App() {
             <Home />
           </Route>
           <Route exact path="/write">
-            <Write requestText={requestText} submitText={submitText} />
+            <Write requestCid={requestCid} submitCid={submitCid} />
           </Route>
           <Route exact path="/mint">
-            <Mint requestUntitled={requestUntitled} newestUntitledId={newestUntitledId} mintFrankie={mintFrankie} mintedCidById={mintedCidById} />
+            <Mint requestUntitledStars={requestUntitledStars} requestUntitled={requestUntitled} newestUntitledId={newestUntitledId} mintFrankie={mintFrankie} />
+          </Route>
+          <Route exact path="/feed">
+            <Feed frankieId={frankieId} mintedCidById={mintedCidById} starsById={starsById} />
           </Route>
           { accounts[0] === victor &&
             <Route exact path="/seedplot">
