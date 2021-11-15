@@ -7,10 +7,14 @@ const SeedPlot = ({seedPlot}) => {
 
   const submit = async (e) => {
     e.preventDefault();
-    await seedPlot(plot);
-    formRef.current.reset();
-    setPlot(undefined);
-    alert("Plot seeded successfully!");
+    if(plot && plot !== "") {
+      await seedPlot(plot);
+      formRef.current.reset();
+      setPlot(undefined);
+      alert("Plot seeded successfully!");
+    } else {
+      alert("Plot seeded Unsuccessfully!");
+    }
   }
 
   const updatePlot = (e) => {

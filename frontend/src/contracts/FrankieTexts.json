@@ -36597,12 +36597,12 @@
         }
       },
       "links": {},
-      "address": "0xf34A20F550C55791cF5A17C56Dee695941536e94",
-      "transactionHash": "0xc6f9132842dd7c779c9c373738f2d1bfb30617ee2f711c0dfb9ebcc4f0122408"
+      "address": "0xe2F19ba7776BCaB0dCe7754fE001934C0c752668",
+      "transactionHash": "0x43bc1177f4f4c14b5822724d03cedeef0d854c3062891f2fd15bfe6fd68cf9c5"
     }
   },
   "schemaVersion": "3.4.3",
-  "updatedAt": "2021-11-13T18:50:35.489Z",
+  "updatedAt": "2021-11-15T11:13:56.956Z",
   "networkType": "ethereum",
   "devdoc": {
     "author": "Mario Mazzaferro",

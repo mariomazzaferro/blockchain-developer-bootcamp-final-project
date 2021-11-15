@@ -30,7 +30,7 @@ contract FrankieTexts is ERC721, Ownable {
     event RequestedCid(string chosenCid, uint256 writerNumber, address requester);
 
     /// @dev Fired upon mintFrankie() call.
-    event MintedFrankie(uint nftId, string nftCid, string indexed thirdCid);
+    event MintedFrankie(uint nftId, string nftCid);
 
     /// @dev Stores data of a Frankenstein Text.
     struct Frankie {
@@ -146,7 +146,7 @@ contract FrankieTexts is ERC721, Ownable {
         delete untitledCids[msg.sender][untitledId];
         mintedCids[frankieId] = newCid;
         stars[oldCid]++;
-        emit MintedFrankie(frankieId, newCid, oldCid);
+        emit MintedFrankie(frankieId, newCid);
         frankieId++;
     }
 
@@ -188,6 +188,24 @@ contract FrankieTexts is ERC721, Ownable {
         frankies[cid] = Frankie(cids, writers);
         frankies[cid].cids.push(cid);
         frankies[cid].writers.push(msg.sender);
+        if(deckCounter < deckSize) {
+          deck[deckCounter] = cid;
+          unchecked { feedCounter++; }
+          deckCounter++;
+        }
+        cidOrder[submitCounter] = cid;
+        unchecked { submitCounter++; }
+    }
+
+    /// @dev Checks if the caller is victor.
+    /// @dev Creates an new blank Frankie.
+    /// @dev If the deck is incomplete: feeds cid into deck.
+    /// @dev Feeds cid in the cidOrder cue.
+    function seedBlankPlot() external onlyOwner() {
+        string[] memory cids;
+        address[] memory writers;
+        string memory cid = string(abi.encodePacked(submitCounter, '000'));
+        frankies[cid] = Frankie(cids, writers);
         if(deckCounter < deckSize) {
           deck[deckCounter] = cid;
           unchecked { feedCounter++; }

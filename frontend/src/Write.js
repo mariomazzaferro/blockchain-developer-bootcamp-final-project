@@ -34,12 +34,17 @@ const Write = ({requestCid, submitCid}) => {
     console.log('Submited!');
     const oldCid = cid;
     const newText = initialText + "// " + text;
-    await submitCid(oldCid, newText);
+    if(cid && text) {
+      await submitCid(oldCid, newText);
+      alert("Submission successful");
+    } else {
+      alert("Submission failed");
+    }
+    
     setWriterNumber(undefined);
     setInitialText(undefined);
     setIsPlot(false);
     formRef.current.reset();
-    alert("Contribution submited successfully!");
   }
 
   const updateText = (e) => {
@@ -54,6 +59,7 @@ const Write = ({requestCid, submitCid}) => {
       <Card.Body>
         <Card.Title>
         <Button variant="dark" onClick={request} style={{color: "greenyellow"}}>Request Text</Button>
+        <br/>
         <br/>
         <p style={{color: "lightgray"}}>{writerNumber === "0" && "First Contribution"}</p>
         <p style={{color: "lightgray"}}>{writerNumber === "1" && "Second Contribution"}</p>

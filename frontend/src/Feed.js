@@ -21,9 +21,12 @@ const Feed = ({mintedCidById, frankieId, starsById}) => {
 
   const getNFT = async (e) => {
     e.preventDefault();
-    if(0 <= NFTId && NFTId < frankieId) {
+    console.log(NFTId);
+    if(NFTId && 0 <= NFTId && NFTId <= parseInt(frankieId)) {
       getFrankie(NFTId);
       setShowId(NFTId);
+      const counter = frankieId - NFTId;
+      setCounter(counter);
     }
   }
 
@@ -48,6 +51,7 @@ const Feed = ({mintedCidById, frankieId, starsById}) => {
       console.log(`id: ${id}`);
       getFrankie(id);
       setCounter(c);
+      console.log(`c counter: ${c}`);
       setShowId(frankieId - c);
     }
   }
@@ -59,6 +63,7 @@ const Feed = ({mintedCidById, frankieId, starsById}) => {
       console.log(`id: ${id}`);
       getFrankie(id);
       setCounter(c);
+      console.log(`c counter: ${c}`);
       setShowId(frankieId - c);
     }
   }
@@ -77,7 +82,7 @@ const Feed = ({mintedCidById, frankieId, starsById}) => {
       <br/>
       {
         text && 
-        <Card  className="shadow-lg p-3 mb-5 bg-white rounded text-center" style={{ width: 'auto', maxWidth: '47rem' }}>
+        <Card className="shadow-lg p-3 mb-5 bg-white rounded text-center" style={{ width: 'auto', maxWidth: '47rem' }}>
         <Card.Body>
         <Card.Title>
           <h5 style={{color: "lightgray"}}>{`FRANKENSTEIN TEXT NFT ID: ${showId}`}</h5>

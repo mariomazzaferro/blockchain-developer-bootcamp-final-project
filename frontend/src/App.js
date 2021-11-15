@@ -13,6 +13,7 @@ import Write from './Write.js';
 import Mint from './Mint.js';
 import SeedPlot from './SeedPlot.js';
 import Feed from './Feed.js';
+import Transfer from './Transfer.js';
 import metamaskLogo from './metamask.png';
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
   const [contract, setContract] = useState(undefined);
   const [victor, setVictor] = useState(undefined);
   const [frankieId, setFrankieId] = useState(undefined);
+  const [newestId, setNewestId] = useState(undefined);
 
   useEffect(() => {
     const init = async () => {
@@ -29,6 +31,11 @@ function App() {
       const contract = await getContract(web3);
       const victor = await contract.methods.owner().call();
       const frankieId = await contract.methods.frankieId().call();
+      try {
+        const newestId = await contract.methods.requestNewestUntitledId().call({from: accounts[0]});
+        setNewestId(newestId);
+      } catch(err){}
+      
       setWeb3(web3);
       setAccounts(accounts);
       setContract(contract);
@@ -48,6 +55,21 @@ function App() {
     };
     init();
   }, []);
+
+  const ownerOf = async (nftId) => {
+    const owner = await contract.methods.ownerOf(nftId).call();
+    return owner;
+  }
+
+  const balanceOf = async (owner) => {
+    const balance = await contract.methods.balanceOf(owner).call();
+    return balance;
+  }
+
+  const transfer = async (from, to, tokenId) => {
+    const res = await contract.methods.safeTransferFrom(from, to, tokenId).send({from: accounts[0]});
+    return res;
+  }
 
   const requestCid = async () => {
     const cid = await contract.methods.requestCid().send({from: accounts[0] });
@@ -135,6 +157,7 @@ function App() {
           <Nav.Link  as={Link} to={"/write"} style={{color: "greenyellow"}}>Write</Nav.Link>
           <Nav.Link  as={Link} to={"/mint"} style={{color: "greenyellow"}}>Mint</Nav.Link>
           <Nav.Link  as={Link} to={"/feed"} style={{color: "greenyellow"}}>Feed</Nav.Link>
+          <Nav.Link  as={Link} to={"/transfer"} style={{color: "greenyellow"}}>Transfer</Nav.Link>
           { accounts[0] === victor &&
             <Nav.Link as={Link} to={"/seedplot"} style={{color: "greenyellow"}}>Seed Plot</Nav.Link>
           }
@@ -154,6 +177,9 @@ function App() {
           </Route>
           <Route exact path="/feed">
             <Feed frankieId={frankieId} mintedCidById={mintedCidById} starsById={starsById} />
+          </Route>
+          <Route exact path="/transfer">
+            <Transfer ownerOf={ownerOf} balanceOf={balanceOf} transfer={transfer} />
           </Route>
           { accounts[0] === victor &&
             <Route exact path="/seedplot">

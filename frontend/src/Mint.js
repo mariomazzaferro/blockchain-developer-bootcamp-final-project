@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { Container, Button, Form, Card, Row, Col } from 'react-bootstrap';
 
@@ -20,39 +20,47 @@ const Mint = ({ requestUntitledStars, mintFrankie, requestUntitled, newestUntitl
   const updateUnId = (e) => {
     const unId = e.target.value;
     setUnId(unId);
+    setUntitled(undefined);
+    setUntitledStars(undefined);
   }
 
   const requestUn = async (e) => {
     e.preventDefault();
-    const untitledCid = await requestUntitled(unId);
-    setUntitledCid(untitledCid);
-    console.log(`untitledCid: ${untitledCid}`);
-    if(untitledCid !== "") {
-      const untitledStars = await requestUntitledStars(unId);
-      setUntitledStars(untitledStars);
-      console.log(`untitledStars: ${untitledStars}`);
-    } else {
-      setUntitledStars(undefined);
-    }
-    if(untitledCid !== "") {
-      const blob = await axios.get(`https://ipfs.io/ipfs/${untitledCid}`);
-      setUntitled(blob.data);
-      console.log(`Untitled Received:${blob.data}`);
-    } else {
-      setUntitled(undefined);
-      console.log("No Untitled to show");
+    if(unId) {
+      const untitledCid = await requestUntitled(unId);
+      setUntitledCid(untitledCid);
+      console.log(`untitledCid: ${untitledCid}`);
+      if(untitledCid !== "") {
+        const untitledStars = await requestUntitledStars(unId);
+        setUntitledStars(untitledStars);
+        console.log(`untitledStars: ${untitledStars}`);
+      } else {
+        setUntitledStars(undefined);
+      }
+      if(untitledCid !== "") {
+        const blob = await axios.get(`https://ipfs.io/ipfs/${untitledCid}`);
+        setUntitled(blob.data);
+        console.log(`Untitled Received:${blob.data}`);
+      } else {
+        setUntitled(undefined);
+        console.log("No Untitled to show");
+      }
     }
   }
 
   const mint = async (e) => {
     e.preventDefault();
-    console.log('Minted!');
-    const newFrankie = title + ';; ' + untitled;
-    const frankieId = await mintFrankie(untitledCid, newFrankie, unId);
-    setUntitled(undefined);
-    setUntitledStars(undefined);
-    formRef.current.reset();
-    alert(`Frankenstein Text minted successfully! NFT Id: ${frankieId}`);
+    if(untitledCid && title && unId) {
+      console.log('Minted!');
+      const newFrankie = title + ';; ' + untitled;
+      const frankieId = await mintFrankie(untitledCid, newFrankie, unId);
+      setUntitled(undefined);
+      setUntitledStars(undefined);
+      formRef.current.reset();
+      alert(`Frankenstein Text minted successfully! NFT Id: ${frankieId}`);
+    } else {
+      alert(`Failed`);
+    }
   }
 
   const updateTitle = (e) => {
@@ -63,23 +71,6 @@ const Mint = ({ requestUntitledStars, mintFrankie, requestUntitled, newestUntitl
   return (
     <Container>
       <br/>
-      <Row>
-        <Col>
-          <Card className="shadow-lg p-3 mb-5 bg-white rounded" style={{ width: 'auto', height:'10rem' }}>
-            <Card.Body>
-            <Card.Title>
-            <Button variant="dark" onClick={() => requestNewestUnId()} style={{color: "greenyellow"}}>Get your newest Untitled Id</Button>
-            </Card.Title>
-            <Card.Text>
-              <br/>
-              <h5>{newestUnId && `Your newest Untitled Id: ${newestUnId}`}</h5>
-            </Card.Text>
-            </Card.Body>
-          </Card>
-        </Col>
-        
-      </Row>
-
 
       <Card className="shadow-lg p-3 mb-5 bg-white rounded" style={{ width: 'auto' }}>
         <Card.Body>
@@ -99,9 +90,7 @@ const Mint = ({ requestUntitledStars, mintFrankie, requestUntitled, newestUntitl
           </Col>
           </Row>
           <br/>
-          <p style={{color: "lightgray"}}>{untitled ? `YOUR UNTITLED TEXT:` : 
-            "No Untitled Text to show"
-          }</p>
+          <p style={{color: "lightgray"}}>{untitled ? `YOUR UNTITLED TEXT:` : "No Untitled Text to show"}</p>
           </Form.Group>
           </Form>
         </Card.Title>
@@ -124,6 +113,20 @@ const Mint = ({ requestUntitledStars, mintFrankie, requestUntitled, newestUntitl
         </Card.Body>
       </Card>
       
+      <Card className="shadow-lg p-3 mb-5 bg-white rounded" style={{ width: 'auto', maxWidth: '40rem', height: '7rem' }}>
+        <Card.Body>
+        <Card.Title>
+          <Row>
+          <Col>
+          <Button variant="dark" onClick={() => requestNewestUnId()} style={{color: "greenyellow"}}>Load your Newest Untitled Id</Button>
+          </Col>
+          <Col>
+          <h5>{newestUnId && `Your newest Untitled Id: ${newestUnId}`}</h5>
+          </Col>
+          </Row>
+        </Card.Title>
+        </Card.Body>
+      </Card>
     </Container>
   );
 }
