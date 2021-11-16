@@ -33,7 +33,12 @@ const Write = ({requestCid, submitCid}) => {
     e.preventDefault();
     console.log('Submited!');
     const oldCid = cid;
-    const newText = initialText + "// " + text;
+    let newText;
+    if(oldCid.includes('000')) {
+      newText = text;
+    } else {
+      newText = initialText + "// " + text;
+    }
     if(cid && text) {
       await submitCid(oldCid, newText);
       alert("Submission successful");
@@ -82,6 +87,9 @@ const Write = ({requestCid, submitCid}) => {
         </Card.Text>
       </Card.Body>
       </Card>
+
+      <h5 style={{color: "gray"}}>Write Mode: request a random text to contribute, write and submit your contribution within 2 hours.</h5>
+      <br/>
     </Container>
   )
 };

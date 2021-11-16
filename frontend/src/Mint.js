@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import axios from 'axios';
 import { Container, Button, Form, Card, Row, Col } from 'react-bootstrap';
 
@@ -127,6 +127,9 @@ const Mint = ({ requestUntitledStars, mintFrankie, requestUntitled, newestUntitl
         </Card.Title>
         </Card.Body>
       </Card>
+
+      <h5 style={{color: "gray"}}>Mint Mode: users have access to their list of finalized Frankenstein Texts, which they have the right to title and mint. The finalized Frankenstein Texts are called Untitled, because… well they have no title yet! You can access your Untitleds through their ids, which start from 0 (your first Untitled text) and increase until your most recent Untitled.</h5>
+      <br/>
     </Container>
   );
 }

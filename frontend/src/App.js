@@ -122,6 +122,12 @@ function App() {
     console.log(`Submit Counter: ${sCounter}`);
   };
 
+  const seedBlankPlot = async () => {
+    await contract.methods.seedBlankPlot().send({from: accounts[0] });
+    const sCounter = await contract.methods.submitCounter().call();
+    console.log(`Submit Counter: ${sCounter}`);
+  };
+
   const mintedCidById = async mintedId => {
     const mintedCid = await contract.methods.mintedCidById(mintedId).call();
     return mintedCid;
@@ -183,7 +189,7 @@ function App() {
           </Route>
           { accounts[0] === victor &&
             <Route exact path="/seedplot">
-              <SeedPlot seedPlot={seedPlot} />
+              <SeedPlot seedPlot={seedPlot} seedBlankPlot={seedBlankPlot} />
             </Route>
           }
         </Switch>

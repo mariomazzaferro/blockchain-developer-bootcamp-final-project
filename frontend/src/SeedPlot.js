@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Container, Button, Form, Card } from 'react-bootstrap';
 
-const SeedPlot = ({seedPlot}) => {
+const SeedPlot = ({seedPlot, seedBlankPlot}) => {
   const [plot, setPlot] = useState(undefined);
   const formRef = useRef(null);
 
@@ -13,7 +13,8 @@ const SeedPlot = ({seedPlot}) => {
       setPlot(undefined);
       alert("Plot seeded successfully!");
     } else {
-      alert("Plot seeded Unsuccessfully!");
+      await seedBlankPlot();
+      alert("Blank plot seeded Unsuccessfully!");
     }
   }
 
@@ -38,6 +39,9 @@ const SeedPlot = ({seedPlot}) => {
       </Form>
       </Card.Text>
       </Card>
+
+      <h5 style={{color: "gray"}}>Seed Plot Mode: victor can seedPlot or seedBlankPlot (empty textarea).</h5>
+      <br/>
     </Container>
   )
 };

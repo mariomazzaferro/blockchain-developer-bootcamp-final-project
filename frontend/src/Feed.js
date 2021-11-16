@@ -123,8 +123,8 @@ const Feed = ({mintedCidById, frankieId, starsById}) => {
             </Card.Body>
           </Card>
       
+      <h5 style={{color: "gray"}}>Feed Mode: users have access to the most recent minted Frankenstein Texts. Users can also search for specific minted Frankenstein Text's Ids.</h5>
       <br/>
-
     </Container>
   );
 }
