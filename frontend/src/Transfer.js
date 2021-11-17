@@ -176,8 +176,7 @@ const Transfer = ({ownerOf, balanceOf, transfer}) => {
             </Card.Text>
             </Card.Body>
           </Card>
-      
-      <h5 style={{color: "gray"}}>Transfer Mode: users can access owner addresses and addresses balances, as well as transfering minted Frankenstein Texts.</h5>
+
       <br/>
     </Container>
   );

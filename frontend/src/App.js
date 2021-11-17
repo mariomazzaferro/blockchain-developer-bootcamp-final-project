@@ -9,9 +9,7 @@ import {
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { getWeb3, getContract, client } from './utils.js';
 import Home from './Home.js';
-import Write from './Write.js';
-import Mint from './Mint.js';
-import SeedPlot from './SeedPlot.js';
+import WritePrompt from './WritePrompt.js';
 import Feed from './Feed.js';
 import Transfer from './Transfer.js';
 import metamaskLogo from './metamask.png';
@@ -20,38 +18,19 @@ function App() {
   const [web3, setWeb3] = useState(undefined);
   const [accounts, setAccounts] = useState(undefined);
   const [contract, setContract] = useState(undefined);
-  const [victor, setVictor] = useState(undefined);
-  const [frankieId, setFrankieId] = useState(undefined);
-  const [newestId, setNewestId] = useState(undefined);
+  const [counter, setCounter] = useState(undefined);
 
   useEffect(() => {
     const init = async () => {
       const web3 = await getWeb3();
       const accounts = await web3.eth.getAccounts();
       const contract = await getContract(web3);
-      const victor = await contract.methods.owner().call();
-      const frankieId = await contract.methods.frankieId().call();
-      try {
-        const newestId = await contract.methods.requestNewestUntitledId().call({from: accounts[0]});
-        setNewestId(newestId);
-      } catch(err){}
+      const counter = await contract.methods.counter().call();
       
       setWeb3(web3);
       setAccounts(accounts);
       setContract(contract);
-      setVictor(victor);
-      setFrankieId(frankieId);
-
-      // for(let i=0; i < 11; i++) {
-      //   console.log(`Iteration:${i}`);
-      //   const cid = await storeString(`PlotNumber${i}`);
-      //   await contract.methods.seedPlot(cid).send({from: accounts[0] });
-      //   const sCounter = await contract.methods.submitCounter().call();
-      //   const dCounter = await contract.methods.deckCounter().call();
-      //   console.log(`Submit Counter: ${sCounter}`);
-      //   console.log(`Deck Counter: ${dCounter}`);
-      // };
-    
+      setCounter(counter);
     };
     init();
   }, []);
@@ -71,11 +50,6 @@ function App() {
     return res;
   }
 
-  const requestCid = async () => {
-    const cid = await contract.methods.requestCid().send({from: accounts[0] });
-    return cid;
-  }
-
   const storeString = async string => {
     const blob = new Blob([string]);
     const cid = await client.storeBlob(blob);
@@ -83,59 +57,28 @@ function App() {
     return cid;
   };
 
-  const submitCid = async (oldCid, string) => {
-    const newCid = await storeString(string);
-    await contract.methods.submitCid(oldCid, newCid).send({from: accounts[0] });
-    const sCounter = await contract.methods.submitCounter().call(); // delete
-    console.log(`Submit Counter: ${sCounter}`); // delete
-  }
+  const comment = async (newString, oldCid) => {
+    const cid = await storeString(newString);
+    await contract.methods.mintPrompt(cid, oldCid).send({from: accounts[0] });
+    const counter = await contract.methods.counter().call();
+    console.log(`counter: ${counter}`);
+  };
 
-  const newestUntitledId = async () => {
-    const newestUnId = await contract.methods.requestNewestUntitledId().call({from: accounts[0]});
-    return newestUnId;
-  } 
-
-  const requestUntitled = async id => {
-    const untitled = await contract.methods.requestUntitledCid(id).call({from: accounts[0]});
-    return untitled;
-  }
-
-  const requestUntitledStars = async id => {
-    const stars = await contract.methods.requestUntitledStars(id).call({from: accounts[0]});
-    return stars;
-  }
-
-  const mintFrankie = async (untitledCid, newFrankie, unId) => {
-    const nftCid = await storeString(newFrankie);
-    const res = await contract.methods.mintFrankie(untitledCid, nftCid, unId).send({from: accounts[0]});
-    const frankieId = res.events.MintedFrankie.returnValues[0];
-    const nftCidFromContract = res.events.MintedFrankie.returnValues[1];
-    console.log(`frankieId: ${frankieId}`);
-    console.log(`nftCidFromContract: ${nftCidFromContract}`);
-    return frankieId;
-  }
-
-  const seedPlot = async string => {
+  const writePrompt = async string => {
     const cid = await storeString(string);
-    await contract.methods.seedPlot(cid).send({from: accounts[0] });
-    const sCounter = await contract.methods.submitCounter().call();
-    console.log(`Submit Counter: ${sCounter}`);
+    await contract.methods.mintPrompt(cid).send({from: accounts[0] });
+    const counter = await contract.methods.counter().call();
+    console.log(`counter: ${counter}`);
   };
 
-  const seedBlankPlot = async () => {
-    await contract.methods.seedBlankPlot().send({from: accounts[0] });
-    const sCounter = await contract.methods.submitCounter().call();
-    console.log(`Submit Counter: ${sCounter}`);
+  const promptById = async promptId => {
+    const promptCid = await contract.methods.promptOrder(promptId).call();
+    return promptCid;
   };
 
-  const mintedCidById = async mintedId => {
-    const mintedCid = await contract.methods.mintedCidById(mintedId).call();
-    return mintedCid;
-  };
-
-  const starsById = async mintedId => {
-    const stars = await contract.methods.starsById(mintedId).call();
-    return stars;
+  const commentsById = async promptCid => {
+    const comments = await contract.methods.promptComments(promptCid).call();
+    return comments;
   };
 
   if(
@@ -155,18 +98,14 @@ function App() {
       <Navbar bg="dark" variant={"dark"} expand="lg">
         <Container>
           <Navbar.Brand>
-            <Nav.Link  as={Link} to={"/"} style={{color: "greenyellow"}}>Frankenstein Texts</Nav.Link>
+            <Nav.Link  as={Link} to={"/"} style={{color: "greenyellow"}}>Writing Prompts</Nav.Link>
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-          <Nav.Link  as={Link} to={"/write"} style={{color: "greenyellow"}}>Write</Nav.Link>
-          <Nav.Link  as={Link} to={"/mint"} style={{color: "greenyellow"}}>Mint</Nav.Link>
+          <Nav.Link as={Link} to={"/writeprompt"} style={{color: "greenyellow"}}>Write Prompt</Nav.Link>
           <Nav.Link  as={Link} to={"/feed"} style={{color: "greenyellow"}}>Feed</Nav.Link>
           <Nav.Link  as={Link} to={"/transfer"} style={{color: "greenyellow"}}>Transfer</Nav.Link>
-          { accounts[0] === victor &&
-            <Nav.Link as={Link} to={"/seedplot"} style={{color: "greenyellow"}}>Seed Plot</Nav.Link>
-          }
           </Nav>
           </Navbar.Collapse>
         </Container>
@@ -175,23 +114,15 @@ function App() {
           <Route exact path="/">
             <Home />
           </Route>
-          <Route exact path="/write">
-            <Write requestCid={requestCid} submitCid={submitCid} />
-          </Route>
-          <Route exact path="/mint">
-            <Mint requestUntitledStars={requestUntitledStars} requestUntitled={requestUntitled} newestUntitledId={newestUntitledId} mintFrankie={mintFrankie} />
+          <Route exact path="/writeprompt">
+            <WritePrompt writePrompt={writePrompt}  />
           </Route>
           <Route exact path="/feed">
-            <Feed frankieId={frankieId} mintedCidById={mintedCidById} starsById={starsById} />
+            <Feed counter={counter} promptById={promptById} commentsById={commentsById} comment={comment} />
           </Route>
           <Route exact path="/transfer">
             <Transfer ownerOf={ownerOf} balanceOf={balanceOf} transfer={transfer} />
           </Route>
-          { accounts[0] === victor &&
-            <Route exact path="/seedplot">
-              <SeedPlot seedPlot={seedPlot} seedBlankPlot={seedBlankPlot} />
-            </Route>
-          }
         </Switch>
     </Router>
   );

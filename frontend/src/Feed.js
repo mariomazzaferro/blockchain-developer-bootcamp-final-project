@@ -2,17 +2,18 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Container, Button, Card, Form, Row, Col } from 'react-bootstrap';
 
-const Feed = ({mintedCidById, frankieId, starsById}) => {
-  const [counter, setCounter] = useState(0);
+const Feed = ({promptById, counter, commentsById, comment}) => {
   const [cid, setCid] = useState(undefined);
   const [text, setText] = useState(undefined);
-  const [stars, setStars] = useState(undefined);
-  const [showId, setShowId] = useState(undefined);
+  const [comments, setComments] = useState(undefined);
   const [NFTId, setNFTId] = useState(undefined);
+  const [showId, setShowId] = useState(undefined);
+  const [commText, setCommText] = useState(undefined);
 
   useEffect(() => {
-    next();
-  }, [frankieId]);
+    setNFTId(counter);
+    setShowId(counter);
+  }, [counter]);
 
   const updateNFTId = (e) => {
     const NFTId = e.target.value;
@@ -22,49 +23,41 @@ const Feed = ({mintedCidById, frankieId, starsById}) => {
   const getNFT = async (e) => {
     e.preventDefault();
     console.log(NFTId);
-    if(NFTId && 0 <= NFTId && NFTId <= parseInt(frankieId)) {
-      getFrankie(NFTId);
-      setShowId(NFTId);
-      const counter = frankieId - NFTId;
-      setCounter(counter);
+    if(NFTId && 0 < NFTId && NFTId <= parseInt(counter)) {
+      getPrompt(NFTId);
     }
   }
 
-  const getFrankie = async (id) => {
-    const cid = await mintedCidById(id);
+  const getPrompt = async (id) => {
+    const cid = await promptById(id);
     setCid(cid);
     console.log(`cid: ${cid}`);
 
     const blob = await axios.get(`https://ipfs.io/ipfs/${cid}`);
     setText(blob.data);
     console.log(`text: ${blob.data}`);
-
-    const stars = await starsById(id);
-    setStars(stars);
-    console.log(`stars: ${stars}`);
+    const comms = await commentsById(cid);
+    setComments(comms);
+    setShowId(id);
   }
 
   const next = async () => {
-    if(counter < frankieId) {
-      const c = counter + 1;
-      const id = frankieId - c;
-      console.log(`id: ${id}`);
-      getFrankie(id);
-      setCounter(c);
-      console.log(`c counter: ${c}`);
-      setShowId(frankieId - c);
+    if(!text && NFTId === counter) {
+      await getPrompt(NFTId);
+    } else if(1 < NFTId) {
+      const c = NFTId - 1;
+      console.log(`NFTId: ${c}`);
+      setNFTId(c);
+      await getPrompt(c);
     }
   }
 
   const prev = async () => {
-    if(counter > 1) {
-      const c = counter - 1;
-      const id = frankieId - c;
-      console.log(`id: ${id}`);
-      getFrankie(id);
-      setCounter(c);
-      console.log(`c counter: ${c}`);
-      setShowId(frankieId - c);
+    if(NFTId < counter) {
+      const c = NFTId + 1;
+      console.log(`NFTId: ${NFTId}`);
+      setNFTId(c);
+      getPrompt(c);
     }
   }
 
@@ -73,10 +66,10 @@ const Feed = ({mintedCidById, frankieId, starsById}) => {
       <br/>
       <Row>
         <Col>
-        <Button variant="dark" onClick={() => prev()} style={{color: "greenyellow"}}>Previous Frankenstein Text</Button>
+        <Button variant="dark" onClick={() => prev()} style={{color: "greenyellow"}}>Previous Prompt</Button>
         </Col>
         <Col>
-        <Button variant="dark" onClick={() => next()} style={{color: "greenyellow"}}>Next Frankenstein Text</Button>
+        <Button variant="dark" onClick={() => next()} style={{color: "greenyellow"}}>Next Prompt</Button>
         </Col>
       </Row>
       <br/>
@@ -85,13 +78,13 @@ const Feed = ({mintedCidById, frankieId, starsById}) => {
         <Card className="shadow-lg p-3 mb-5 bg-white rounded text-center" style={{ width: 'auto', maxWidth: '47rem' }}>
         <Card.Body>
         <Card.Title>
-          <h5 style={{color: "lightgray"}}>{`FRANKENSTEIN TEXT NFT ID: ${showId}`}</h5>
+          <h5 style={{color: "lightgray"}}>{`PROMPT ID: ${showId}`}</h5>
         </Card.Title>
         <Card.Text>
         <br/>
         <h5>{text && `"${text}"`}</h5>
         <br/>
-        <p style={{color: "lightgray"}}>{stars && `Stars: ${stars}`}</p>
+        <p style={{color: "lightgray"}}>{comments && `Comments: ${comments}`}</p>
         </Card.Text>
         </Card.Body>
       </Card>
@@ -111,7 +104,7 @@ const Feed = ({mintedCidById, frankieId, starsById}) => {
             ></Form.Control>
             </Col>
             <Col>
-            <Button variant="dark" type="submit" style={{color: "greenyellow"}}>Get Frankenstein Text by Id</Button>
+            <Button variant="dark" type="submit" style={{color: "greenyellow"}}>Get Prompt by Id</Button>
             </Col>
             </Row>
             </Form.Group>
@@ -122,8 +115,6 @@ const Feed = ({mintedCidById, frankieId, starsById}) => {
             </Card.Text>
             </Card.Body>
           </Card>
-      
-      <h5 style={{color: "gray"}}>Feed Mode: users have access to the most recent minted Frankenstein Texts. Users can also search for specific minted Frankenstein Text's Ids.</h5>
       <br/>
     </Container>
   );

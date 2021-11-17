@@ -1,5 +1,5 @@
-const FrankieTexts = artifacts.require("FrankieTexts");
+const Prompts = artifacts.require("Prompts");
 
 module.exports = function (deployer) {
-  deployer.deploy(FrankieTexts, 10);
+  deployer.deploy(Prompts);
 };
