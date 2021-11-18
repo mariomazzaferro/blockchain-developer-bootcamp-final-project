@@ -108,7 +108,7 @@ const Feed = ({promptById, counter, commentsById, comment}) => {
         <Form ref={formRef} onSubmit={(e) => submitComment(e)}>
         <Form.Group>
         <Form.Control
-          as="textarea" rows="13"  placeholder="Write comment..."
+          as="textarea" rows="13"  placeholder="Write your comment...    Once minted, it will become a prompt NFT, and anyone will be able to create new prompts by commenting this one."
           onChange={e => updateComment(e)}
         ></Form.Control>
         <Button variant="dark" type="submit" className="font-weight-bold" style={{color: "silver"}}>Mint Comment</Button>

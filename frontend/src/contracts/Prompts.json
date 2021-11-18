@@ -21186,12 +21186,12 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0x9492dF801e42e9B38285a6f03103821a214Cd97B",
-      "transactionHash": "0x3013bc6e3cd779c140b2d05e3b6a3ff650bbc5d5aaaa3bcb7d292b28daa56bf5"
+      "address": "0x18167424fdCf4F2ab90404ccc95dE6D779E25f79",
+      "transactionHash": "0x3f79a2de3d48c4a44428c5bc0d6ca91687433a260b747844dbc60cfe5c9935f2"
     }
   },
   "schemaVersion": "3.4.3",
-  "updatedAt": "2021-11-18T18:11:11.273Z",
+  "updatedAt": "2021-11-18T20:04:47.968Z",
   "networkType": "ethereum",
   "devdoc": {
     "author": "Mario Mazzaferro",
