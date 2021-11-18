@@ -8,10 +8,9 @@ import {
 } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { getWeb3, getContract, client } from './utils.js';
-import Home from './Home.js';
 import WritePrompt from './WritePrompt.js';
 import Feed from './Feed.js';
-import Transfer from './Transfer.js';
+import Ownership from './Ownership.js';
 import metamaskLogo from './metamask.png';
 
 function App() {
@@ -57,18 +56,22 @@ function App() {
     return cid;
   };
 
-  const comment = async (newString, oldCid) => {
-    const cid = await storeString(newString);
-    await contract.methods.mintPrompt(cid, oldCid).send({from: accounts[0] });
-    const counter = await contract.methods.counter().call();
-    console.log(`counter: ${counter}`);
+  const comment = async (newString, oldString, oldCid) => {
+    console.log(`oldCid before minting: ${oldCid}`);
+    let formatedString = `${oldString} .../${accounts[0]}(COMMENT): ${newString}`;
+    const cid = await storeString(formatedString);
+    const res = await contract.methods.mintPrompt(cid, oldCid).send({from: accounts[0] });
+    console.log(res.events.MintedPrompt.returnValues);
+    const returnedOldCid = res.events.MintedPrompt.returnValues[2];
+    return returnedOldCid
   };
 
   const writePrompt = async string => {
-    const cid = await storeString(string);
-    await contract.methods.mintPrompt(cid).send({from: accounts[0] });
-    const counter = await contract.methods.counter().call();
-    console.log(`counter: ${counter}`);
+    let formatedString = `.../${accounts[0]}(PROMPT): ${string}`;
+    const cid = await storeString(formatedString);
+    const res = await contract.methods.mintPrompt(cid).send({from: accounts[0] });
+    const returnedNewCid = res.events.MintedPrompt.returnValues[2];
+    return returnedNewCid;
   };
 
   const promptById = async promptId => {
@@ -95,33 +98,27 @@ function App() {
 
   return (
     <Router>
-      <Navbar bg="dark" variant={"dark"} expand="lg">
+      <Navbar bg="dark" variant="dark" expand="lg">
         <Container>
-          <Navbar.Brand>
-            <Nav.Link  as={Link} to={"/"} style={{color: "greenyellow"}}>Writing Prompts</Nav.Link>
-          </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
-          <Nav.Link as={Link} to={"/writeprompt"} style={{color: "greenyellow"}}>Write Prompt</Nav.Link>
-          <Nav.Link  as={Link} to={"/feed"} style={{color: "greenyellow"}}>Feed</Nav.Link>
-          <Nav.Link  as={Link} to={"/transfer"} style={{color: "greenyellow"}}>Transfer</Nav.Link>
+          <Nav className="me-auto font-weight-bold">
+          <Nav.Link className="px-5" bg="dark" as={Link} to={"/"}><h5>.../WRITING PROMPTS</h5></Nav.Link>
+          <Nav.Link className="px-5" as={Link} to={"/feed"}>FEED</Nav.Link>
+          <Nav.Link className="px-5" as={Link} to={"/ownership"}>OWNERSHIP</Nav.Link>
           </Nav>
           </Navbar.Collapse>
         </Container>
       </Navbar>
       <Switch>
           <Route exact path="/">
-            <Home />
-          </Route>
-          <Route exact path="/writeprompt">
             <WritePrompt writePrompt={writePrompt}  />
           </Route>
           <Route exact path="/feed">
             <Feed counter={counter} promptById={promptById} commentsById={commentsById} comment={comment} />
           </Route>
-          <Route exact path="/transfer">
-            <Transfer ownerOf={ownerOf} balanceOf={balanceOf} transfer={transfer} />
+          <Route exact path="/ownership">
+            <Ownership ownerOf={ownerOf} balanceOf={balanceOf} transfer={transfer} />
           </Route>
         </Switch>
     </Router>

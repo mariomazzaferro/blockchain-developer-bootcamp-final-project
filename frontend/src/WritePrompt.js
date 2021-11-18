@@ -8,12 +8,15 @@ const WritePrompt = ({writePrompt}) => {
   const submit = async (e) => {
     e.preventDefault();
     if(prompt && prompt !== "") {
-      await writePrompt(prompt);
-      formRef.current.reset();
+      const returnedNewCid = await writePrompt(prompt);
+      console.log(`returnedNewCid: ${returnedNewCid}`);
       setPrompt(undefined);
-      alert("Prompt minted successfully!");
-    } else {
-      alert("Prompt failed!");
+      formRef.current.reset();
+      if(returnedNewCid) {
+        alert("Prompt minted successfully");
+      } else {
+        alert("Prompt failed");
+      }
     }
   }
 
@@ -25,15 +28,15 @@ const WritePrompt = ({writePrompt}) => {
   return (
     <Container>
       <br/>
-      <Card className="shadow-lg p-3 mb-5 bg-white rounded" style={{ width: 'auto' }}>
+      <Card className="shadow-lg p-3 mb-5 bg-white rounded text-center" style={{ width: 'auto' }}>
       <Card.Text>
       <Form ref={formRef} onSubmit={(e) => submit(e)}>
         <Form.Group>
         <Form.Control
-          as="textarea" rows="9"  placeholder="Write prompt..."
+          as="textarea" rows="13"  placeholder="Write prompt..."
           onChange={e => updatePrompt(e)}
         ></Form.Control>
-        <Button variant="dark" type="submit" style={{color: "greenyellow"}}>Mint Prompt</Button>
+        <Button variant="dark" type="submit" className="font-weight-bold" style={{color: "silver"}}>Mint Prompt</Button>
         </Form.Group>
       </Form>
       </Card.Text>

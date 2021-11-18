@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Container, Button, Card, Form, Row, Col } from 'react-bootstrap';
 
-const Transfer = ({ownerOf, balanceOf, transfer}) => {
+const Ownership = ({ownerOf, balanceOf, transfer}) => {
   const [NFTId, setNFTId] = useState(undefined);
   const [ownerById, setOwnerById] = useState(undefined);
   const [owner, setOwner] = useState(undefined);
@@ -9,6 +9,7 @@ const Transfer = ({ownerOf, balanceOf, transfer}) => {
   const [from, setFrom] = useState(undefined);
   const [to, setTo] = useState(undefined);
   const [tokenId, setTokenId] = useState(undefined);
+  const formRef = useRef(null);
 
   const updateFrom = (e) => {
     const from = e.target.value;
@@ -33,6 +34,10 @@ const Transfer = ({ownerOf, balanceOf, transfer}) => {
         const resFrom = res.events.Transfer.returnValues[0];
         if(resFrom === from) {
           alert("Token transfer successful");
+          setFrom(undefined);
+          setTo(undefined);
+          setTokenId(undefined);
+          formRef.current.reset();
         } else {
           alert("Token transfer failed");
         }
@@ -87,7 +92,7 @@ const Transfer = ({ownerOf, balanceOf, transfer}) => {
             ></Form.Control>
             </Col>
             <Col>
-            <Button variant="dark" type="submit" style={{color: "greenyellow"}}>Owner by NFT Id</Button>
+            <Button variant="dark" type="submit" className="font-weight-bold" style={{color: "silver"}}>Get Owner Address by NFT Id</Button>
             </Col>
             </Row>
             </Form.Group>
@@ -117,7 +122,7 @@ const Transfer = ({ownerOf, balanceOf, transfer}) => {
             ></Form.Control>
             </Col>
             <Col>
-            <Button variant="dark" type="submit" style={{color: "greenyellow"}}> NFT balance by Address</Button>
+            <Button variant="dark" type="submit" className="font-weight-bold" style={{color: "silver"}}>Get NFT balance by Owner Address</Button>
             </Col>
             </Row>
             </Form.Group>
@@ -136,7 +141,7 @@ const Transfer = ({ownerOf, balanceOf, transfer}) => {
       <Card className="shadow-lg p-3 mb-5 bg-white rounded" style={{ width: 'auto', maxWidth: '57rem'}}>
         <Card.Body>
           <Card.Title>
-            <Form inline onSubmit={(e) => transferToken(e)}>
+            <Form inline ref={formRef} onSubmit={(e) => transferToken(e)}>
             <Form.Group>
             <Row>
             <Col>
@@ -161,18 +166,13 @@ const Transfer = ({ownerOf, balanceOf, transfer}) => {
             ></Form.Control>
             </Col>
             <Col>
-            <Button variant="dark" type="submit" style={{color: "greenyellow"}}>Transfer NFT</Button>
+            <Button variant="dark" type="submit" className="font-weight-bold" style={{color: "silver"}}>Transfer NFT</Button>
             </Col>
             </Row>
             </Form.Group>
           </Form>
             </Card.Title>
             <Card.Text>
-            <br/>
-            <h5>{
-              (owner && balance) &&
-              `NFT Balance: ${balance}`
-            }</h5>
             </Card.Text>
             </Card.Body>
           </Card>
@@ -182,4 +182,4 @@ const Transfer = ({ownerOf, balanceOf, transfer}) => {
   );
 }
 
-export default Transfer;
+export default Ownership;

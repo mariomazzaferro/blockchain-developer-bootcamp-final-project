@@ -11,7 +11,7 @@ contract Prompts is ERC721 {
     uint256 public counter;
 
     /// @dev Fired upon successful mintPrompt() call.
-    event MintedPrompt(uint promptId, string promptCid);
+    event MintedPrompt(uint promptId, string promptCid, string parentPromptCid);
 
     /// @dev Relates Prompt CIDs with its list of comment CIDs.
     mapping(string => string[]) public prompts;
@@ -32,23 +32,25 @@ contract Prompts is ERC721 {
     }
 
     /// @dev Sets initial values.
-    constructor() ERC721("Prompts", "PRP") {}
+    constructor() ERC721("Prompts", "PRP") {
+    }
 
     function _mintValidPrompt(string calldata newCid) private {
       prompts[newCid] = [newCid];
       counter++;
       _safeMint(msg.sender, counter);
-      emit MintedPrompt(counter, newCid);
       promptOrder[counter] = newCid;
     }
 
     function mintPrompt(string calldata newCid) external validNewCid(newCid) {
       _mintValidPrompt(newCid);
+      emit MintedPrompt(counter, newCid, newCid);
     }
 
     function mintPrompt(string calldata newCid, string calldata oldCid) external validNewCid(newCid) validOldCid(oldCid) {
       _mintValidPrompt(newCid);
       prompts[oldCid].push(newCid);
+      emit MintedPrompt(counter, newCid, oldCid);
     }
 
     function promptComments(string calldata promptCid) external view validOldCid(promptCid) returns(uint) {

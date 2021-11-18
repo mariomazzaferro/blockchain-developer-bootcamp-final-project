@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { Container, Button, Card, Form, Row, Col } from 'react-bootstrap';
 
@@ -9,11 +9,33 @@ const Feed = ({promptById, counter, commentsById, comment}) => {
   const [NFTId, setNFTId] = useState(undefined);
   const [showId, setShowId] = useState(undefined);
   const [commText, setCommText] = useState(undefined);
+  const formRef = useRef(null);
 
   useEffect(() => {
-    setNFTId(counter);
-    setShowId(counter);
+    setNFTId(parseInt(counter)+1);
+    setText('.../0xe89b7291784c3e6f1cf3297af12935c497ae0ec0(PROMPT): This is an example of the structure of a prompt. Above you will find the unique NFT number id of the current prompt, below you will find the number of comments; which represents the times someone commented the current prompt and created a new NFT from it. .../0x53c7c1f12589564a3d012432aa0b8044eee05db9(COMMENT): When you comment a prompt, the generated NFT will have a structure like this example (original prompt + comment(s)). .../0xe2ad2d1df71a616556d2cf2c72a4ed939c7374d0(COMMENT): Other people can use your comment as a prompt for a new comment, and so on. Click "Next Prompt" and have fun!');
+    setComments(0);
+    setShowId(0);
   }, [counter]);
+
+  const updateComment = (e) => {
+    const comm = e.target.value;
+    setCommText(comm);
+  }
+
+  const submitComment = async (e) => {
+    e.preventDefault();
+    const returnedOldCid = await comment(commText, text, cid);
+    setCommText(undefined);
+    formRef.current.reset();
+    console.log(`returnedOldCid: ${returnedOldCid}`);
+    console.log(`cid: ${cid}`);
+    if(returnedOldCid === cid) {
+      alert("Comment minted successfully");
+    } else {
+      alert("Comment failed");
+    }
+  }
 
   const updateNFTId = (e) => {
     const NFTId = e.target.value;
@@ -22,7 +44,6 @@ const Feed = ({promptById, counter, commentsById, comment}) => {
 
   const getNFT = async (e) => {
     e.preventDefault();
-    console.log(NFTId);
     if(NFTId && 0 < NFTId && NFTId <= parseInt(counter)) {
       getPrompt(NFTId);
     }
@@ -31,22 +52,16 @@ const Feed = ({promptById, counter, commentsById, comment}) => {
   const getPrompt = async (id) => {
     const cid = await promptById(id);
     setCid(cid);
-    console.log(`cid: ${cid}`);
-
     const blob = await axios.get(`https://ipfs.io/ipfs/${cid}`);
     setText(blob.data);
-    console.log(`text: ${blob.data}`);
     const comms = await commentsById(cid);
     setComments(comms);
     setShowId(id);
   }
 
   const next = async () => {
-    if(!text && NFTId === counter) {
-      await getPrompt(NFTId);
-    } else if(1 < NFTId) {
+    if(1 < NFTId) {
       const c = NFTId - 1;
-      console.log(`NFTId: ${c}`);
       setNFTId(c);
       await getPrompt(c);
     }
@@ -55,7 +70,6 @@ const Feed = ({promptById, counter, commentsById, comment}) => {
   const prev = async () => {
     if(NFTId < counter) {
       const c = NFTId + 1;
-      console.log(`NFTId: ${NFTId}`);
       setNFTId(c);
       getPrompt(c);
     }
@@ -66,31 +80,46 @@ const Feed = ({promptById, counter, commentsById, comment}) => {
       <br/>
       <Row>
         <Col>
-        <Button variant="dark" onClick={() => prev()} style={{color: "greenyellow"}}>Previous Prompt</Button>
+        <Button variant="dark" onClick={() => prev()} className="font-weight-bold" style={{color: "silver"}}>Previous Prompt</Button>
         </Col>
+        <Col></Col>
         <Col>
-        <Button variant="dark" onClick={() => next()} style={{color: "greenyellow"}}>Next Prompt</Button>
+          
+        </Col>
+        <Col></Col>
+        <Col>
+        <Button variant="dark" onClick={() => next()} className="font-weight-bold" style={{color: "silver"}}>Next Prompt</Button>
         </Col>
       </Row>
       <br/>
       {
         text && 
-        <Card className="shadow-lg p-3 mb-5 bg-white rounded text-center" style={{ width: 'auto', maxWidth: '47rem' }}>
+        <Card className="shadow-lg p-3 mb-5 bg-white rounded text-center" style={{ width: 'auto', maxWidth: '64rem' }}>
         <Card.Body>
         <Card.Title>
           <h5 style={{color: "lightgray"}}>{`PROMPT ID: ${showId}`}</h5>
         </Card.Title>
         <Card.Text>
         <br/>
-        <h5>{text && `"${text}"`}</h5>
+        <h5>{text && `${text}`}</h5>
         <br/>
-        <p style={{color: "lightgray"}}>{comments && `Comments: ${comments}`}</p>
+        <p style={{color: "lightgray"}}>{`COMMENTS: ${comments}`}</p>
+        <br/>
+        <Form ref={formRef} onSubmit={(e) => submitComment(e)}>
+        <Form.Group>
+        <Form.Control
+          as="textarea" rows="13"  placeholder="Write comment..."
+          onChange={e => updateComment(e)}
+        ></Form.Control>
+        <Button variant="dark" type="submit" className="font-weight-bold" style={{color: "silver"}}>Mint Comment</Button>
+        </Form.Group>
+      </Form>
         </Card.Text>
         </Card.Body>
       </Card>
       }
 
-      <Card className="shadow-lg p-3 mb-5 bg-white rounded" style={{ width: 'auto', maxWidth: '47rem' }}>
+      <Card className="shadow-lg p-3 mb-5 bg-white rounded" style={{ width: 'auto', maxWidth: '30rem' }}>
         <Card.Body>
           <Card.Title>
             <Form inline onSubmit={(e) => getNFT(e)}>
@@ -104,15 +133,12 @@ const Feed = ({promptById, counter, commentsById, comment}) => {
             ></Form.Control>
             </Col>
             <Col>
-            <Button variant="dark" type="submit" style={{color: "greenyellow"}}>Get Prompt by Id</Button>
+            <Button variant="dark" type="submit" className="font-weight-bold" style={{color: "silver"}}>Get Prompt by Id</Button>
             </Col>
             </Row>
             </Form.Group>
           </Form>
             </Card.Title>
-            <Card.Text>
-              
-            </Card.Text>
             </Card.Body>
           </Card>
       <br/>
