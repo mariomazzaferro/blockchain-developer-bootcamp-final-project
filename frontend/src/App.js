@@ -10,7 +10,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { getWeb3, getContract, client } from './utils.js';
 import WritePrompt from './WritePrompt.js';
 import Feed from './Feed.js';
+import Ramifications from './Ramifications.js';
 import Ownership from './Ownership.js';
+import About from './About.js';
 import metamaskLogo from './metamask.png';
 
 function App() {
@@ -52,22 +54,19 @@ function App() {
   const storeString = async string => {
     const blob = new Blob([string]);
     const cid = await client.storeBlob(blob);
-    console.log(`fresh cid: ${cid}`);
     return cid;
   };
 
-  const comment = async (newString, oldString, oldCid) => {
-    console.log(`oldCid before minting: ${oldCid}`);
-    let formatedString = `${oldString} .../${accounts[0]}(COMMENT): ${newString}`;
+  const ramificate = async (newString, oldString, oldId) => {
+    let formatedString = `${oldString} ...${accounts[0]} ${newString}`;
     const cid = await storeString(formatedString);
-    const res = await contract.methods.mintPrompt(cid, oldCid).send({from: accounts[0] });
-    console.log(res.events.MintedPrompt.returnValues);
-    const returnedOldCid = res.events.MintedPrompt.returnValues[2];
-    return returnedOldCid
+    const res = await contract.methods.mintPrompt(cid, oldId).send({from: accounts[0] });
+    const returnedOldId = res.events.MintedPrompt.returnValues[2];
+    return returnedOldId
   };
 
   const writePrompt = async string => {
-    let formatedString = `.../${accounts[0]}(PROMPT): ${string}`;
+    let formatedString = `${accounts[0]} PROMPT ${string}`;
     const cid = await storeString(formatedString);
     const res = await contract.methods.mintPrompt(cid).send({from: accounts[0] });
     const returnedNewCid = res.events.MintedPrompt.returnValues[2];
@@ -75,14 +74,19 @@ function App() {
   };
 
   const promptById = async promptId => {
-    const promptCid = await contract.methods.promptOrder(promptId).call();
+    const promptCid = await contract.methods.promptOrder(promptId, 0).call();
     return promptCid;
   };
 
-  const commentsById = async promptCid => {
-    const comments = await contract.methods.promptComments(promptCid).call();
-    return comments;
+  const ramificationsById = async promptId => {
+    const ramifications = await contract.methods.promptRamifications(promptId).call();
+    return ramifications;
   };
+
+  const getRamificationCid = async (promptId, ramificationId) => {
+    const ramificationCid = await contract.methods.promptOrder(promptId, ramificationId).call();
+    return ramificationCid;
+  }
 
   if(
     typeof web3 === 'undefined'
@@ -103,9 +107,11 @@ function App() {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto font-weight-bold">
-          <Nav.Link className="px-5" bg="dark" as={Link} to={"/"}><h5>...WRITING PROMPTS</h5></Nav.Link>
+          <Nav.Link className="px-5" bg="dark" as={Link} to={"/"}><h5>...WRITING NFT PROMPTS</h5></Nav.Link>
           <Nav.Link className="px-5" as={Link} to={"/feed"}>FEED</Nav.Link>
+          <Nav.Link className="px-5" as={Link} to={"/ramifications"}>RAMIFICATIONS</Nav.Link>
           <Nav.Link className="px-5" as={Link} to={"/ownership"}>OWNERSHIP</Nav.Link>
+          <Nav.Link className="px-5" as={Link} to={"/about"}>ABOUT</Nav.Link>
           </Nav>
           </Navbar.Collapse>
         </Container>
@@ -115,10 +121,16 @@ function App() {
             <WritePrompt writePrompt={writePrompt}  />
           </Route>
           <Route exact path="/feed">
-            <Feed counter={counter} promptById={promptById} commentsById={commentsById} comment={comment} />
+            <Feed counter={counter} promptById={promptById} ramificationsById={ramificationsById} ramificate={ramificate} />
+          </Route>
+          <Route exact path="/ramifications">
+            <Ramifications counter={counter} promptById={promptById} ramificationsById={ramificationsById} getRamificationCid={getRamificationCid} />
           </Route>
           <Route exact path="/ownership">
             <Ownership ownerOf={ownerOf} balanceOf={balanceOf} transfer={transfer} />
+          </Route>
+          <Route exact path="/about">
+            <About />
           </Route>
         </Switch>
     </Router>

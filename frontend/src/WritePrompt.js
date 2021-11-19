@@ -34,10 +34,10 @@ const WritePrompt = ({writePrompt}) => {
         <Form.Group>
         <Form.Control
           as="textarea" rows="13"
-          placeholder="Write your prompt...   Once minted, it will become a prompt NFT, and anyone will be able to create new prompts by commenting this one."
+          placeholder="Write your prompt... : )"
           onChange={e => updatePrompt(e)}
         ></Form.Control>
-        <Button variant="dark" type="submit" className="font-weight-bold" style={{color: "silver"}}>Mint Prompt</Button>
+        <Button variant="dark" type="submit" className="font-weight-bold" style={{color: "silver"}}>Mint Prompt $</Button>
         </Form.Group>
       </Form>
       </Card.Text>

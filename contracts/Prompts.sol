@@ -11,23 +11,14 @@ contract Prompts is ERC721 {
     uint256 public counter;
 
     /// @dev Fired upon successful mintPrompt() call.
-    event MintedPrompt(uint promptId, string promptCid, string parentPromptCid);
-
-    /// @dev Relates Prompt CIDs with its list of comment CIDs.
-    mapping(string => string[]) public prompts;
+    event MintedPrompt(uint promptId, string promptCid, uint parentPromptId);
 
     /// @dev Order of Prompts represented by their respective IPFS CIDs.
-    mapping(uint256 => string) public promptOrder;
+    mapping(uint256 => string[]) public promptOrder;
 
-    /// @dev Checks if newCid is valid.
-    modifier validNewCid(string calldata newCid) {
-      require(prompts[newCid].length == 0);
-      _;
-    }
-
-    /// @dev Checks if newCid is valid.
-    modifier validOldCid(string calldata oldCid) {
-      require(prompts[oldCid].length != 0);
+    /// @dev Checks if oldCid is valid.
+    modifier validOldId(uint oldId) {
+      require(promptOrder[oldId].length != 0);
       _;
     }
 
@@ -36,29 +27,23 @@ contract Prompts is ERC721 {
     }
 
     function _mintValidPrompt(string calldata newCid) private {
-      prompts[newCid] = [newCid];
       counter++;
+      promptOrder[counter] = [newCid];
       _safeMint(msg.sender, counter);
-      promptOrder[counter] = newCid;
     }
 
-    function mintPrompt(string calldata newCid) external validNewCid(newCid) {
+    function mintPrompt(string calldata newCid) external {
       _mintValidPrompt(newCid);
-      emit MintedPrompt(counter, newCid, newCid);
+      emit MintedPrompt(counter, newCid, counter);
     }
 
-    function mintPrompt(string calldata newCid, string calldata oldCid) external validNewCid(newCid) validOldCid(oldCid) {
+    function mintPrompt(string calldata newCid, uint oldId) external validOldId(oldId) {
       _mintValidPrompt(newCid);
-      prompts[oldCid].push(newCid);
-      emit MintedPrompt(counter, newCid, oldCid);
+      promptOrder[oldId].push(newCid);
+      emit MintedPrompt(counter, newCid, oldId);
     }
 
-    function promptComments(string calldata promptCid) external view validOldCid(promptCid) returns(uint) {
-      return prompts[promptCid].length - 1;
-    }
-
-    function promptCommentById(string calldata promptCid, uint commentId) external view validOldCid(promptCid) returns(string memory) {
-      require(commentId < prompts[promptCid].length);
-      return prompts[promptCid][commentId];
+    function promptRamifications(uint promptId) external view validOldId(promptId) returns(uint) {
+      return promptOrder[promptId].length - 1;
     }
 }

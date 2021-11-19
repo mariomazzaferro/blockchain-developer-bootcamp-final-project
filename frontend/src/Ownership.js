@@ -86,7 +86,7 @@ const Ownership = ({ownerOf, balanceOf, transfer}) => {
             <Row>
             <Col>
             <Form.Control
-              placeholder="NFT Id"
+              placeholder="NFT Id : )"
               type="number"
               onChange={e => updateNFTId(e)}
             ></Form.Control>
@@ -99,7 +99,6 @@ const Ownership = ({ownerOf, balanceOf, transfer}) => {
           </Form>
           </Card.Title>
           <Card.Text>
-            <br/>
             <h5>{
               (NFTId && ownerById) &&
               `Owner: ${ownerById}`
@@ -116,7 +115,7 @@ const Ownership = ({ownerOf, balanceOf, transfer}) => {
             <Row>
             <Col>
             <Form.Control
-              placeholder="Address"
+              placeholder="Address : )"
               type="string"
               onChange={e => updateOwner(e)}
             ></Form.Control>
@@ -129,7 +128,6 @@ const Ownership = ({ownerOf, balanceOf, transfer}) => {
           </Form>
             </Card.Title>
             <Card.Text>
-            <br/>
             <h5>{
               (owner && balance) &&
               `NFT Balance: ${balance}`
@@ -146,27 +144,27 @@ const Ownership = ({ownerOf, balanceOf, transfer}) => {
             <Row>
             <Col>
             <Form.Control
-              placeholder="Address From"
+              placeholder="Address From : ("
               type="string"
               onChange={e => updateFrom(e)}
             ></Form.Control>
             </Col>
             <Col>
             <Form.Control
-              placeholder="Address To"
+              placeholder="Address To : )"
               type="string"
               onChange={e => updateTo(e)}
             ></Form.Control>
             </Col>
             <Col>
             <Form.Control
-              placeholder="NFT Id"
+              placeholder="NFT Id : )"
               type="number"
               onChange={e => updateTokenId(e)}
             ></Form.Control>
             </Col>
             <Col>
-            <Button variant="dark" type="submit" className="font-weight-bold" style={{color: "silver"}}>Transfer NFT</Button>
+            <Button variant="dark" type="submit" className="font-weight-bold" style={{color: "silver"}}>Transfer NFT $</Button>
             </Col>
             </Row>
             </Form.Group>
@@ -176,8 +174,6 @@ const Ownership = ({ownerOf, balanceOf, transfer}) => {
             </Card.Text>
             </Card.Body>
           </Card>
-
-      <br/>
     </Container>
   );
 }
