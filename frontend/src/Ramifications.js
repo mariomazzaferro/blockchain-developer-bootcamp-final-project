@@ -25,12 +25,8 @@ const Ramifications = ({promptById, counter, ramificationsById, getRamificationC
 
   const getNFT = async (e) => {
     e.preventDefault();
-    if(NFTId && 0 < NFTId && NFTId <= parseInt(counter)) {
-      if(!ramNumber) {
-        await getPrompt(NFTId, 1);
-      } else {
-        await getPrompt(NFTId, ramNumber);
-      }
+    if(NFTId && 0 < NFTId && NFTId <= parseInt(counter) && ramNumber) {
+      await getPrompt(NFTId, ramNumber);
     }
   }
 

@@ -18298,12 +18298,12 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0x8e97d957B73a4349EB45bE9Cd032F8B8A251B0C7",
-      "transactionHash": "0x807cc7bcfb1a55d9d04c7b075213e9d03684c66507795f14a60d282bd5e82494"
+      "address": "0x18167424fdCf4F2ab90404ccc95dE6D779E25f79",
+      "transactionHash": "0x9b016b1653540f717e20cc688d544bb4b073aa4d9b02088053c10b6757f8745f"
     }
   },
   "schemaVersion": "3.4.3",
-  "updatedAt": "2021-11-19T18:30:22.497Z",
+  "updatedAt": "2021-11-19T22:07:09.524Z",
   "networkType": "ethereum",
   "devdoc": {
     "author": "Mario Mazzaferro",

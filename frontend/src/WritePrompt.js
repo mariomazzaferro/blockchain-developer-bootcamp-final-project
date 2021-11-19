@@ -9,7 +9,6 @@ const WritePrompt = ({writePrompt}) => {
     e.preventDefault();
     if(prompt && prompt !== "") {
       const returnedNewCid = await writePrompt(prompt);
-      console.log(`returnedNewCid: ${returnedNewCid}`);
       setPrompt(undefined);
       formRef.current.reset();
       if(returnedNewCid) {
