@@ -1,46 +1,55 @@
-# Frankenstein Texts
+# CRYPTO PROMPTS
 
-During our English classes, in Brazil, we used to play a game: everybody should start writing a text (in English), it could be anything; a story, a dissertation, a letter, a poem, a recipe, etc. After a while the teacher would give us a signal and all the students would pass their text to the right, get the text from someone else, read it and continue the other student’s text in the best way possible, until the next signal from the teacher and so on. The texts would usually end up with 20 to 30 lines and 4 to 6 co-writers. In the end, it was fun to see how the texts unrolled into pearls of creativity or just nonsense. Furthermore, it was a great exercise for practicing english and stimulate creativity.
-
-For the Final Project I wish to implement a version of this game on the blockchain, where different random addresses contribute to write a text and gain the opportunity to title and mint the final "Frankenstein Text" as a unique NFT.
+There is a subreddit called <a href="https://www.reddit.com/r/WritingPrompts/">r/WritingPrompts</a>, where millions of writers contribute to create new content. Crypto Prompts is the implementation of that in the Ethereum Blockchain. Where each prompt or ramification is an ERC-721 Non-Fungible Token that can be bought, sold, transfered or used as a prompt for other ramifications.
 
 # Overview
 
-The Frankenstein Text will have a fixed number of 3 co-writers. There will be a 2 hours deadline for each individual contribution.
+Right now, the millions of <a href="https://www.reddit.com/r/WritingPrompts/">r/WritingPrompts</a> users simply post their prompts and comments (ramifications) on reddit with no way to effectively claim authorship and profit from their creative work. They are using reddit simply as a training ground for their writing skills.
 
-As a writer, you will be given a random text to contribute, it might be a text with already some contributions or even the opportunity to start a text from scratch. After all 3 contributions are concluded, each co-writer has the opportunity to title and mint the text as a unique NFT.
+Having said that, the 2 main objectives of this dapp are:
+- to attribute ownership to content created through this type of collaboration.
+- to empower writers and wannabe-writers and make their journey more profitable.
 
-The Frankenstein Text NFT will have a number of mints associated to it, ranging from 1 to 3, which will represent the number of co-writers that minted the text. One would assume that a higher number of mints indicates a higher quality of text, since more contributors thought the text was interesting enough to mint.
-
-There will be two ways to interact with the game:
-
-Write – users request a random text to contribute, and have 2 hours to write and submit their contribution.
-
-Mint – users have access to their list of finalized Frankenstein Texts, which they have the right to title and mint after the 3rd contribution is submitted.
+As a reader using Crypto Prompts: you will be able to read every prompt and each of its ramifications (if they exist), as well as search for second order ramifications of any prompt.
+As a writer using Crypto Prompts: you will be able to write new initial prompts and new ramifications for any existing prompt.
 
 # User Workflow
 
-WRITE MODE:<br/>
 1- User registers on the site (using metamask).<br/>
-2- User requests to write (signed transaction).<br/>
-3- User receives a random text to contribute.<br/>
-4- User contributes to the random text and submits the contribution (signed transaction).<br/>
-5- For a week after the 3rd contribution, each co-writer has the opportunity to title and mint the text as a unique Frankenstein Text NFT.<br/>
-
-MINT MODE:<br/>
-1- User registers on the site (using metamask).<br/>
-2- User enters Mint Mode (after some contributions, the user should have a list of possible Frankenstein Texts to title and mint).<br/>
-3- User titles the Frankenstein Text of choice and mints it.
+2- User writes an initial prompt or a ramification prompt and mints it (signed transaction).<br/>
+3- User can read other people's prompts and write ramifications of them.<br/>
+4- User can read other people's prompts and each of its ramifications.<br/>
 
 # Development
 
-The idea is to have the individual contributions stored in IPFS and only the IPFS CIDs stored in the blockchain. The backend should be 100% decentralized (IPFS + smart contract).
+The idea is to have the prompt text stored in IPFS and only the IPFS CIDs stored in the blockchain. The backend is 100% decentralized (IPFS + smart contract).
 
-Frankenstein Text NFTs should follow the ERC-721 standard.
+Crypto Prompt NFTs inherit from OpenZeppelin's ERC-721 standard.
 
-A pain point for developing this game is the randomness aspect of it. Using Chainlink Random Number Generator solves this, but it's also an overkill, and it would make the game expensive to play.<br/>
-Instead, the initial approach is to implement a pseudo-random functionality that makes it unfeasible for dishonest players to successfully and consistently receive specific desired texts to contribute.
+This is a simple dapp, its core functionality implements two mappings: "promptCids" and "ramifications". "promptCids" relates NFT Id to its stored text IPFS CID. "ramifications" relates NFT Id to its list of ramifications.
 
-# Future Improvements (outside the scope of the final project)
+# Public Ethereum Account
 
-Once the basic functionality explained above is implemented, the next step will be to create a generative art character collection called Frankenstein Mugshots. This collection will associate a unique art to each minted Frankenstein Text. It should algorithmicly generate Frankenstein Mugshots based on Frankenstein Texts' data, and have a number of stars in it representing the number of mints.
+"Please also include your public Ethereum account if you would like to receive your certification as an NFT:" Yes, please. Public Ethereum Account: 0x11111081d8428d4F3A82Ee3D64e8C6350eD4FcB5 
+
+# Directory structure
+
+- contracts folder - Crypto Prompts smart contract and its respective migration contract.
+
+- frontend folder - Front end code for Crypto Prompts that was built with React.js.
+
+- migrations - Files used for truffle's migration steps.
+
+- test - Folder containing test for the smart contract written in JavaScript.
+
+# Building and running the project locally
+
+1. Clone this repo to your local environment.
+2. run `cd blockchain-developer-bootcamp-final-project`
+3. run `npm install`
+4. run `cd frontend`
+5. run `npm install`
+6. Once installation is complete, run `npm start` to launch the front-end.
+
+# Deployed Application
+<a href="https://sharp-bose-58b7c2.netlify.app/">https://sharp-bose-58b7c2.netlify.app/</a>

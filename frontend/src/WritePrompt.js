@@ -8,10 +8,10 @@ const WritePrompt = ({writePrompt}) => {
   const submit = async (e) => {
     e.preventDefault();
     if(prompt && prompt !== "") {
-      const returnedNewCid = await writePrompt(prompt);
+      const resStatus = await writePrompt(prompt);
       setPrompt(undefined);
       formRef.current.reset();
-      if(returnedNewCid) {
+      if(resStatus) {
         alert("Prompt minted successfully");
       } else {
         alert("Prompt failed");

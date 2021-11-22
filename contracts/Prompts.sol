@@ -10,15 +10,15 @@ contract Prompts is ERC721 {
     /// @dev Keeps track of the number of minted Prompts.
     uint256 public counter;
 
-    /// @dev Fired upon successful mintPrompt() call.
-    event MintedPrompt(uint promptId, string promptCid, uint parentPromptId);
+    /// @dev Prompts Ids and their respective IPFS CIDs.
+    mapping(uint256 => string) public promptCids;
 
-    /// @dev Order of Prompts represented by their respective IPFS CIDs.
-    mapping(uint256 => string[]) public promptOrder;
+    /// @dev Prompts Ids and their respective lists of ramifications.
+    mapping(uint256 => uint256[]) public ramifications;
 
-    /// @dev Checks if oldCid is valid.
+    /// @dev Checks if oldId is valid.
     modifier validOldId(uint oldId) {
-      require(promptOrder[oldId].length != 0);
+      require(oldId <= counter);
       _;
     }
 
@@ -26,24 +26,26 @@ contract Prompts is ERC721 {
     constructor() ERC721("Prompts", "PRP") {
     }
 
+    /// @dev Effectively mints prompt.
     function _mintValidPrompt(string calldata newCid) private {
       counter++;
-      promptOrder[counter] = [newCid];
+      promptCids[counter] = newCid;
       _safeMint(msg.sender, counter);
     }
 
+    /// @dev Mints initial prompt.
     function mintPrompt(string calldata newCid) external {
       _mintValidPrompt(newCid);
-      emit MintedPrompt(counter, newCid, counter);
     }
 
+    /// @dev Mints ramification prompt.
     function mintPrompt(string calldata newCid, uint oldId) external validOldId(oldId) {
       _mintValidPrompt(newCid);
-      promptOrder[oldId].push(newCid);
-      emit MintedPrompt(counter, newCid, oldId);
+      ramifications[oldId].push(counter);
     }
 
+    /// @dev Returns number of ramifications for that specific promptId.
     function promptRamifications(uint promptId) external view validOldId(promptId) returns(uint) {
-      return promptOrder[promptId].length - 1;
+      return ramifications[promptId].length;
     }
 }

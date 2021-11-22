@@ -30,9 +30,8 @@ const Ownership = ({ownerOf, balanceOf, transfer}) => {
     e.preventDefault();
     if(from && to && tokenId) {
       try {
-        const res = await transfer(from, to, tokenId);
-        const resFrom = res.events.Transfer.returnValues[0];
-        if(resFrom === from) {
+        const resStatus = await transfer(from, to, tokenId);
+        if(resStatus) {
           alert("Token transfer successful");
           setFrom(undefined);
           setTo(undefined);

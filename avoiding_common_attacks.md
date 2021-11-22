@@ -1,22 +1,22 @@
 ## Avoiding Common Attacks
 
-1. Using Specific Compiler Pragma: Check.
+1. Using Specific Compiler Pragma: Yes.
 
-2. Proper Use of Require, Assert and Revert: Check.
+2. Proper Use of Require, Assert and Revert: Yes.
 
-3. Use Modifiers Only for Validation: Check.
+3. Use Modifiers Only for Validation: Yes.
 
 4. Pull Over Push: Does not apply.
 
-5. Checks-Effects-Interactions: Check.
+5. Checks-Effects-Interactions: Yes.
 
 6. Proper use of .call and .delegateCall: Does not apply.
 
-7. Frontrunning: It might be used to somehow hack the pseudo-randomness of the game, but even if it's possible it would be very limited, making it irrelevant in the author's opinion.
+7. Frontrunning: Does not apply.
 
-8. Timestamp Dependence: Check.
+8. Timestamp Dependence: Does not apply.
 
-9. Network Stuffing DoS: Represent a problem to active players if the network is stuffed for long periods.
+9. Network Stuffing DoS: Does not apply.
 
 10. Forcibly Sending Ether: Does not apply.
 
@@ -24,7 +24,7 @@
 
 12. Reentrancy: Does not apply.
 
-13. Integer Under / Overflow: Check. In the case of requestCounter, submitCounter and feedCounter the overflow is allowed and will keep the game running even if these variables ever get to the highest possible number.
+13. Integer Under / Overflow: Yes.
 
 14. Unexpected Revert DoS: Does not apply.
 

@@ -6,12 +6,6 @@ contract('Prompts', (accounts) => {
     prompts = await Prompts.new();
   });
 
-  // Check if the contract is initialized correctly.
-  it('Should have correct initial values', async () => {
-    let counter = await prompts.counter();
-    assert.equal(counter, 0, "counter is not 0!");
-  });
-
   // Checks if mintPrompt() is working properly.
   it('Should mintPrompt() successfully', async () => {
     let counter0 = await prompts.counter();
@@ -46,31 +40,41 @@ contract('Prompts', (accounts) => {
   it('Should promptRamifications() successfully', async () => {
     await prompts.mintPrompt("Prompt1");
     let ramifications0 = await prompts.promptRamifications(1);
-    await prompts.mintPrompt("Comment1", 1);
+    await prompts.mintPrompt("Ramification1", 1);
     let ramifications1 = await prompts.promptRamifications(1);
-    await prompts.mintPrompt("Comment2", 1);
+    await prompts.mintPrompt("Ramification2", 1);
     let ramifications2 = await prompts.promptRamifications(1);
 
-    let counter2 = await prompts.counter();
     assert.equal(ramifications0, 0, "ramifications0 is not 0!");
     assert.equal(ramifications1, 1, "ramifications1 is not 1!");
     assert.equal(ramifications2, 2, "ramifications2 is not 2!");
   });
 
-  // Checks if promptOrder getter is working properly.
-  it('Should get promptOrder successfully', async () => {
+  // Checks if promptCids getter is working properly.
+  it('Should get promptCids successfully', async () => {
     await prompts.mintPrompt("Prompt1");
-    let comm0 = await prompts.promptOrder(1, 0);
+    let prompt1 = await prompts.promptCids(1);
 
-    await prompts.mintPrompt("Comment1", 1);
-    let comm1 = await prompts.promptOrder(1, 1); //Should pass test
-    //let comm1 = await prompts.promptCommentById(1, 2); //Should fail test
+    await prompts.mintPrompt("Prompt2");
+    let prompt2 = await prompts.promptCids(2);
 
-    await prompts.mintPrompt("Comment2", 1);
-    let comm2 = await prompts.promptOrder(1, 2);
+    await prompts.mintPrompt("Prompt3");
+    let prompt3 = await prompts.promptCids(3);
 
-    assert.equal(comm0, "Prompt1", "comm0 is not 'Prompt1'!");
-    assert.equal(comm1, "Comment1", "comm1 is not 'Comment1'!");
-    assert.equal(comm2, "Comment2", "comm2 is not 'Comment2'!");
+    assert.equal(prompt1, "Prompt1", "prompt1 is not 'Prompt1'!");
+    assert.equal(prompt2, "Prompt2", "prompt2 is not 'Prompt2'!");
+    assert.equal(prompt3, "Prompt3", "prompt3 is not 'Prompt3'!");
+  });
+
+  // Checks if ramifications() is working properly.
+  it('Should return ramification successfully', async () => {
+    await prompts.mintPrompt("Prompt1");
+    await prompts.mintPrompt("Ramification1", 1);
+    let ramifications1 = await prompts.ramifications(1, 0);
+    await prompts.mintPrompt("Ramification2", 1);
+    let ramifications2 = await prompts.ramifications(1, 1);
+
+    assert.equal(ramifications1, 2, "ramifications1 is not 2!");
+    assert.equal(ramifications2, 3, "ramifications2 is not 3!");
   });
 });

@@ -2,15 +2,14 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Container, Button, Card, Form, Row, Col } from 'react-bootstrap';
 
-const Ramifications = ({promptById, counter, ramificationsById, getRamificationCid}) => {
+const Ramifications = ({promptById, counter, ramificationsById, getRamificationCid, getRamificationId}) => {
   const [cid, setCid] = useState(undefined);
+  const [ramiId, setRamiId] = useState(undefined);
   const [text, setText] = useState(undefined);
   const [ramNumber, setRamNumber] = useState(undefined);
   const [showRamNumber, setShowRamNumber] = useState(undefined);
-
   const [ramifications, setRamifications] = useState(undefined);
   const [NFTId, setNFTId] = useState(undefined);
-
   const [showNFTId, setShowNFTId] = useState(undefined);
 
   const updateRamNumber = (e) => {
@@ -25,14 +24,16 @@ const Ramifications = ({promptById, counter, ramificationsById, getRamificationC
 
   const getNFT = async (e) => {
     e.preventDefault();
-    if(NFTId && 0 < NFTId && NFTId <= parseInt(counter) && ramNumber) {
+    if(0 < NFTId && NFTId <= counter && ramNumber >= 0) {
       await getPrompt(NFTId, ramNumber);
     }
   }
 
   const getPrompt = async (promptId, ramificationNumber) => {
     const cid = await getRamificationCid(promptId, ramificationNumber);
+    const ramiId = await getRamificationId(promptId, ramificationNumber);
     setCid(cid);
+    setRamiId(ramiId);
     const blob = await axios.get(`https://ipfs.io/ipfs/${cid}`);
     setText(blob.data);
     const rams = await ramificationsById(promptId);
@@ -42,7 +43,7 @@ const Ramifications = ({promptById, counter, ramificationsById, getRamificationC
   }
 
   const next = async () => {
-    if(ramNumber < ramifications) {
+    if(ramNumber + 1 < ramifications) {
       const c = ramNumber + 1;
       setRamNumber(c);
       await getPrompt(NFTId, c);
@@ -50,7 +51,7 @@ const Ramifications = ({promptById, counter, ramificationsById, getRamificationC
   }
 
   const prev = async () => {
-    if(ramNumber > 1) {
+    if(ramNumber >= 1) {
       const c = ramNumber - 1;
       setRamNumber(c);
       await getPrompt(NFTId, c);
@@ -76,8 +77,8 @@ const Ramifications = ({promptById, counter, ramificationsById, getRamificationC
         <Card className="shadow-lg p-3 mb-5 bg-white rounded text-center" style={{ width: 'auto' }}>
         <Card.Body>
         <Card.Title>
-          <h5 style={{color: "lightgray"}}>{showNFTId && `PROMPT ID: ${showNFTId}`}</h5>
-          <h5 style={{color: "lightgray"}}>{showRamNumber && `RAMIFICATION: ${showRamNumber}`}</h5>
+          <h5 style={{color: "lightgray"}}>{`PROMPT ID: ${showNFTId}`}</h5>
+          <h5 style={{color: "lightgray"}}>{`RAMIFICATION: ${showNFTId}.${showRamNumber} (RAMIFICATION PROMPT ID: ${ramiId})`}</h5>
         </Card.Title>
         <Card.Text>
         <br/>
@@ -99,6 +100,7 @@ const Ramifications = ({promptById, counter, ramificationsById, getRamificationC
             <Form.Control
               placeholder="NFT Id : )"
               type="number"
+              value={NFTId}
               onChange={e => updateNFTId(e)}
             ></Form.Control>
             </Col>
@@ -106,6 +108,7 @@ const Ramifications = ({promptById, counter, ramificationsById, getRamificationC
             <Form.Control
               placeholder="Ramification Number : )"
               type="number"
+              value={ramNumber}
               onChange={e => updateRamNumber(e)}
             ></Form.Control>
             </Col>

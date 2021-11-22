@@ -25,13 +25,13 @@ const Feed = ({promptById, counter, ramificationsById, ramificate}) => {
 
   const submitRamification = async (e) => {
     e.preventDefault();
-    let returnedOldId;
+    let resStatus;
     if(ramiText && text && NFTId <= counter) {
-      returnedOldId = await ramificate(ramiText, text, NFTId);
+      resStatus = await ramificate(ramiText, text, NFTId);
     }
     setRamiText(undefined);
     formRef.current.reset();
-    if(returnedOldId == NFTId) {
+    if(resStatus) {
       alert("Ramification Prompt minted successfully");
     } else {
       alert("Ramification failed");

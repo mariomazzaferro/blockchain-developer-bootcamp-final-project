@@ -26,7 +26,12 @@ function App() {
       const web3 = await getWeb3();
       const accounts = await web3.eth.getAccounts();
       const contract = await getContract(web3);
-      const counter = await contract.methods.counter().call();
+      let counter;
+      try {
+        counter = await contract.methods.counter().call();
+      } catch(err) {
+        console.log(err.message);  
+      }
       
       setWeb3(web3);
       setAccounts(accounts);
@@ -48,7 +53,7 @@ function App() {
 
   const transfer = async (from, to, tokenId) => {
     const res = await contract.methods.safeTransferFrom(from, to, tokenId).send({from: accounts[0]});
-    return res;
+    return res.status;
   }
 
   const storeString = async string => {
@@ -61,20 +66,18 @@ function App() {
     let formatedString = `${oldString} ...${accounts[0]} ${newString}`;
     const cid = await storeString(formatedString);
     const res = await contract.methods.mintPrompt(cid, oldId).send({from: accounts[0] });
-    const returnedOldId = res.events.MintedPrompt.returnValues[2];
-    return returnedOldId
+    return res.status;
   };
 
   const writePrompt = async string => {
-    let formatedString = `${accounts[0]} PROMPT ${string}`;
+    let formatedString = `...${accounts[0]} ${string}`;
     const cid = await storeString(formatedString);
     const res = await contract.methods.mintPrompt(cid).send({from: accounts[0] });
-    const returnedNewCid = res.events.MintedPrompt.returnValues[2];
-    return returnedNewCid;
+    return res.status;
   };
 
   const promptById = async promptId => {
-    const promptCid = await contract.methods.promptOrder(promptId, 0).call();
+    const promptCid = await contract.methods.promptCids(promptId).call();
     return promptCid;
   };
 
@@ -84,18 +87,25 @@ function App() {
   };
 
   const getRamificationCid = async (promptId, ramificationId) => {
-    const ramificationCid = await contract.methods.promptOrder(promptId, ramificationId).call();
+    const ramiPromptId = await contract.methods.ramifications(promptId, ramificationId).call();
+    const ramificationCid = await contract.methods.promptCids(ramiPromptId).call();
     return ramificationCid;
+  }
+
+  const getRamificationId = async (promptId, ramificationId) => {
+    const ramiPromptId = await contract.methods.ramifications(promptId, ramificationId).call();
+    return ramiPromptId;
   }
 
   if(
     typeof web3 === 'undefined'
     || typeof accounts === 'undefined'
+    || typeof counter === 'undefined'
   ) {
     return (
       <div className="my-5 text-center">
         <img src={metamaskLogo} width="250" class="mb-4" alt=""/>
-        <h1>Please connect Metamask</h1>
+        <h1>Please install Metamask and connect to Ropsten Network</h1>
       </div>
     )
   }
@@ -107,7 +117,7 @@ function App() {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto font-weight-bold">
-          <Nav.Link className="px-5" bg="dark" as={Link} to={"/"}><h5>...WRITING NFT PROMPTS</h5></Nav.Link>
+          <Nav.Link className="px-5" bg="dark" as={Link} to={"/"}><h5>CRYPTO PROMPTS</h5></Nav.Link>
           <Nav.Link className="px-5" as={Link} to={"/feed"}>FEED</Nav.Link>
           <Nav.Link className="px-5" as={Link} to={"/ramifications"}>RAMIFICATIONS</Nav.Link>
           <Nav.Link className="px-5" as={Link} to={"/ownership"}>OWNERSHIP</Nav.Link>
@@ -124,7 +134,7 @@ function App() {
             <Feed counter={counter} promptById={promptById} ramificationsById={ramificationsById} ramificate={ramificate} />
           </Route>
           <Route exact path="/ramifications">
-            <Ramifications counter={counter} promptById={promptById} ramificationsById={ramificationsById} getRamificationCid={getRamificationCid} />
+            <Ramifications counter={counter} promptById={promptById} ramificationsById={ramificationsById} getRamificationCid={getRamificationCid} getRamificationId={getRamificationId} />
           </Route>
           <Route exact path="/ownership">
             <Ownership ownerOf={ownerOf} balanceOf={balanceOf} transfer={transfer} />
