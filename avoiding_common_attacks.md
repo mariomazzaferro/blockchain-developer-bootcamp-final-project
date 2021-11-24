@@ -1,5 +1,7 @@
 ## Avoiding Common Attacks
 
+Since the project has a lean functionality there is almost no attack vector that applies here. Nevertheless the necessary protections have been implemented.
+
 1. Using Specific Compiler Pragma: Yes.
 
 2. Proper Use of Require, Assert and Revert: Yes.
@@ -24,7 +26,7 @@
 
 12. Reentrancy: Does not apply.
 
-13. Integer Under / Overflow: Yes.
+13. Integer Under / Overflow: Yes (SafeMath is generally not needed starting with Solidity 0.8, since the compiler now has built in overflow checking.).
 
 14. Unexpected Revert DoS: Does not apply.
 

@@ -3,28 +3,27 @@ pragma solidity 0.8.0;
 
 import "../node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
-/// @title A writing propts dapp
+/// @title Writing propts dapp
 /// @author Mario Mazzaferro
 contract Prompts is ERC721 {
 
     /// @dev Keeps track of the number of minted Prompts.
     uint256 public counter;
 
-    /// @dev Prompts Ids and their respective IPFS CIDs.
+    /// @dev Prompt Ids and their respective IPFS CID.
     mapping(uint256 => string) public promptCids;
 
-    /// @dev Prompts Ids and their respective lists of ramifications.
+    /// @dev Prompt Ids and their respective list of ramifications.
     mapping(uint256 => uint256[]) public ramifications;
 
-    /// @dev Checks if oldId is valid.
+    /// @dev Checks if oldId is an existing prompt.
     modifier validOldId(uint oldId) {
       require(oldId <= counter);
       _;
     }
 
-    /// @dev Sets initial values.
-    constructor() ERC721("Prompts", "PRP") {
-    }
+    /// @dev Sets initial values for the ERC-721 standard.
+    constructor() ERC721("Prompts", "PRP") {}
 
     /// @dev Effectively mints prompt.
     function _mintValidPrompt(string calldata newCid) private {
@@ -33,7 +32,7 @@ contract Prompts is ERC721 {
       _safeMint(msg.sender, counter);
     }
 
-    /// @dev Mints initial prompt.
+    /// @dev Mints prompt.
     function mintPrompt(string calldata newCid) external {
       _mintValidPrompt(newCid);
     }

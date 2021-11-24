@@ -6,7 +6,7 @@ contract('Prompts', (accounts) => {
     prompts = await Prompts.new();
   });
 
-  // Checks if mintPrompt() is working properly.
+  // Checks the value of the counter variable while calling mintPrompt() function.
   it('Should mintPrompt() successfully', async () => {
     let counter0 = await prompts.counter();
     await prompts.mintPrompt("Prompt1");
@@ -18,14 +18,15 @@ contract('Prompts', (accounts) => {
     assert.equal(counter2, 2, "counter2 is not 2!");
   });
 
-  // Checks if validOldCid() modifier is working properly.
+  // Checks the value of the counter variable while calling mintPrompt() function
+  // with invalid oldId argument. 
   it('Should NOT mintPrompt() successfully (validOldCid)', async () => {
     let counter0 = await prompts.counter();
     await prompts.mintPrompt("Prompt1");
     let counter1 = await prompts.counter();
     try {
       await prompts.mintPrompt("Comment1", 2);  //Should pass test
-      //await prompts.mintPrompt("Comment1", 1); //Should fail test
+      //await prompts.mintPrompt("Comment1", 1); //Should fail test with counter2 = 2
     } catch(err) {
       console.log(err.message);
     }
@@ -36,7 +37,7 @@ contract('Prompts', (accounts) => {
     assert.equal(counter2, 1, "counter2 is not 1!");
   });
 
-  // Checks if promptRamifications() is working properly.
+  // Checks if promptRamifications() is working while minting ramifications.
   it('Should promptRamifications() successfully', async () => {
     await prompts.mintPrompt("Prompt1");
     let ramifications0 = await prompts.promptRamifications(1);
@@ -66,7 +67,7 @@ contract('Prompts', (accounts) => {
     assert.equal(prompt3, "Prompt3", "prompt3 is not 'Prompt3'!");
   });
 
-  // Checks if ramifications() is working properly.
+  // Checks if ramifications getter is working properly.
   it('Should return ramification successfully', async () => {
     await prompts.mintPrompt("Prompt1");
     await prompts.mintPrompt("Ramification1", 1);

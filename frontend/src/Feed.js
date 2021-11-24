@@ -13,7 +13,7 @@ const Feed = ({promptById, counter, ramificationsById, ramificate}) => {
 
   useEffect(() => {
     setNFTId(parseInt(counter)+1);
-    setText('...0xe89b7291784c3e6f1cf3297af12935c497ae0ec0 Example of the structure of a prompt (...promptWriterAddress <prompt> + ...ramificationWriterAddress <ramification>). Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. ...0xe2ad2d1df71a616556d2cf2c72a4ed939c7374d0 Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?');
+    setText('“…0x11111081d8428d4F3A82Ee3D64e8C6350eD4FcB5 Anonymous writers had no incentives, besides their own commitment to those words. It had always been that way. Now we finally get paid.”');
     setRamifications(0);
     setShowId(0);
   }, [counter]);
@@ -106,7 +106,7 @@ const Feed = ({promptById, counter, ramificationsById, ramificate}) => {
         <Form ref={formRef} onSubmit={(e) => submitRamification(e)}>
         <Form.Group>
         <Form.Control
-          as="textarea" rows="13"  placeholder="Write your ramification...    Once minted, it will become a NFT prompt, anyone will be able to create new prompts by ramificating this one : )"
+          as="textarea" rows="13"  placeholder="Write your ramification...    Once minted, it will become a NFT prompt, anyone will be able to create new prompts by ramificating yours : )"
           onChange={e => updateRamification(e)}
         ></Form.Control>
         <Button variant="dark" type="submit" className="font-weight-bold" style={{color: "silver"}}>Mint Prompt $</Button>

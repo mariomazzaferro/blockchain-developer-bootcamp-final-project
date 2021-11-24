@@ -31,7 +31,7 @@ const About = () => {
           <h5>CRYPTO PROMPTS</h5>
         </Card.Title>
         <Card.Text>
-          <p>This platform is 100% decentralized, the code is open source and there is no owner, nor profit. Crypto Prompts is a public service, everything you pay here is spent exclusively on blockchain fees. The initial proposal is inspired on Writing Prompts subreddit, with its literary appeal, but there are zero rules here, you can write whatever you want however you want it. There can be question prompts, making the ramification dynamic similar to Quora Digest. There can be discussion prompts, tilting more towards Twitter's dynamic. There are endless possibilities for new prompts, its impossible to guess all of them now, the best way to predict the futere is by writing it.</p>
+          <p>This platform is 100% decentralized, the code is open source and there is no owner, nor profit. Crypto Prompts is a public service, everything you pay here is spent exclusively on blockchain fees. The initial proposal is inspired on Writing Prompts subreddit, with its literary appeal, but there are no rules, you can write whatever you want however you want it. There can be question prompts, making the ramification dynamic similar to Quora Digest. There can be discussion prompts, tilting more towards Twitter's dynamic. There are endless possibilities for new prompts, its impossible to guess all of them now, the best way to predict the futere is by writing it.</p>
         </Card.Text>
         </Card.Body>
       </Card>

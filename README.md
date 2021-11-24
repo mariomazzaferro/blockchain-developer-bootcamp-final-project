@@ -47,12 +47,14 @@ This is a simple dapp, its core functionality implements two mappings: "promptCi
 
 ## Building and running the project locally
 
-1. Clone this repo to your local environment.
-2. run `cd blockchain-developer-bootcamp-final-project`
-3. run `npm install`
-4. run `cd frontend`
-5. run `npm install`
-6. Once installation is complete, run `npm start` to launch the front-end.
+1. Clone this repo to your local environment. Run `git clone https://github.com/mariomazzaferro/blockchain-developer-bootcamp-final-project.git`
+2. Enter the repo. Run `cd blockchain-developer-bootcamp-final-project`
+3. Install root dependencies. Run `npm install`
+4. Run unit tests on default port 9545. Run `truffle test`
+5. Enter frontend folder. Run `cd frontend`
+6. Install frontend dependencies. Run `npm install`
+7. Create .env file inside frontend folder with REACT_APP_NFTSTORAGE_API_KEY = <NFTSTORAGE_API_KEY> (<a href="https://nft.storage/">https://nft.storage/</a>)
+8. Once installation is complete, from within the frontend folder run `npm start` to launch the front-end.
 
 
 ## Deployed Application

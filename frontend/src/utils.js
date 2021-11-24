@@ -2,8 +2,7 @@ import Web3 from 'web3';
 import { NFTStorage } from 'nft.storage';
 import Prompts from './contracts/Prompts.json';
 
-const apiKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDZGZDk4Qzg4MzU5YTRDNENBYjkwNDVhNGVlZTAxYWFhNDE2ODRGRWIiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTYzNDY4MjA0ODUzMywibmFtZSI6IlByaW1hIn0.cUwmpnPU9F8erl5xLg0AqSG0OQAqv0JGug0N5SHnU9w';
-const client = new NFTStorage({ token: apiKey });
+const client = new NFTStorage({ token: process.env.REACT_APP_NFTSTORAGE_API_KEY });
 
 const getWeb3 = () => {
   return new Promise((resolve, reject) => {
@@ -16,10 +15,11 @@ const getWeb3 = () => {
         } catch (error) {
           reject(error);
         }
+        resolve(web3);
       } else if(window.web3) {
         resolve(window.web3);
       } else {
-        reject('Please install Metamask')
+        reject('Please install Metamask');
       }
     });
   });

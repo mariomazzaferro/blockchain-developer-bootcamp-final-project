@@ -20,6 +20,7 @@ function App() {
   const [accounts, setAccounts] = useState(undefined);
   const [contract, setContract] = useState(undefined);
   const [counter, setCounter] = useState(undefined);
+  const [network, setNetwork] = useState(undefined);
 
   useEffect(() => {
     const init = async () => {
@@ -33,6 +34,19 @@ function App() {
         console.log(err.message);  
       }
       
+      const networkId = await web3.eth.net.getId();
+      if(networkId === 1) {
+        setNetwork("Ethereum");
+      } else if(networkId === 3) {
+        setNetwork("Ropsten");
+      } else if(networkId === 4) {
+        setNetwork("Rinkeby");
+      } else if(networkId === 5) {
+        setNetwork("Goerli");
+      } else if(networkId === 5777) {
+        setNetwork("Ganache");
+      } 
+
       setWeb3(web3);
       setAccounts(accounts);
       setContract(contract);
@@ -117,7 +131,7 @@ function App() {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto font-weight-bold">
-          <Nav.Link className="px-5" bg="dark" as={Link} to={"/"}><h5>CRYPTO PROMPTS</h5></Nav.Link>
+          <Nav.Link className="px-5" bg="dark" as={Link} to={"/"}><h5>...CRYPTO PROMPTS</h5></Nav.Link>
           <Nav.Link className="px-5" as={Link} to={"/feed"}>FEED</Nav.Link>
           <Nav.Link className="px-5" as={Link} to={"/ramifications"}>RAMIFICATIONS</Nav.Link>
           <Nav.Link className="px-5" as={Link} to={"/ownership"}>OWNERSHIP</Nav.Link>
@@ -126,6 +140,9 @@ function App() {
           </Navbar.Collapse>
         </Container>
       </Navbar>
+      <br/>
+      {accounts && <p style={{color: "silver", textAlign: "center"}}>{`Active Account: ${accounts[0]} (${network})`}</p>
+      }
       <Switch>
           <Route exact path="/">
             <WritePrompt writePrompt={writePrompt}  />
