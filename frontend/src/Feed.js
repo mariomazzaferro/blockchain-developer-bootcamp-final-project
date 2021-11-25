@@ -13,7 +13,7 @@ const Feed = ({promptById, counter, ramificationsById, ramificate}) => {
 
   useEffect(() => {
     setNFTId(parseInt(counter)+1);
-    setText('“…0x11111081d8428d4F3A82Ee3D64e8C6350eD4FcB5 Anonymous writers had no incentives, besides their own commitment to those words. It had always been that way. Now we finally get paid.”');
+    setText('The next prompt is the youngest, then they get older.');
     setRamifications(0);
     setShowId(0);
   }, [counter]);
