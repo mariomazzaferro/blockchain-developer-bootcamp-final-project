@@ -21,7 +21,7 @@ const About = () => {
           <h5>ERC-721 NFT STANDARD</h5>
         </Card.Title>
         <Card.Text>
-          <p>Non-Fungible Tokens are used to identify something in a unique way, and to securely manage its ownership. This type of Tokens are perfect to be used on platforms that offer collectible items or any other generic items. The ERC-721 is the main standard for NFTs in the crypto industry, the NFTs you create here are compatible with every NFT Marketplace.</p>
+          <p>Non-Fungible Tokens are used to identify something in a unique way, and to securely manage its ownership. This type of Tokens are perfect to be used on platforms that offer collectible items or any other generic items. The ERC-721 is the main standard for NFTs in the crypto industry. The NFTs you create here are compatible with every NFT Marketplace.</p>
         </Card.Text>
         </Card.Body>
       </Card>
@@ -31,7 +31,7 @@ const About = () => {
           <h5>CRYPTO PROMPTS</h5>
         </Card.Title>
         <Card.Text>
-          <p>This platform is 100% decentralized, the code is open source and there are no owners, nor profits. Crypto Prompts is a public service, everything you pay here is spent exclusively on blockchain fees. The initial proposal is inspired by Writing Prompts subreddit, with its literary appeal, but there are no rules, you can write whatever you want, however you want it. There can be question prompts, making the ramification dynamic similar to Quora. There can be discussion prompts, tilting more towards Twitter's dynamic. There are endless possibilities for new prompts, its impossible to guess all of them now, the best way to predict the futere is by writing it.</p>
+          <p>This platform is 100% decentralized, the code is open source and there are no owners, nor profit. Crypto Prompts is a public service, everything you pay here is spent exclusively on blockchain fees. The initial proposal is inspired by Writing Prompts subreddit, with its literary appeal, but there are no rules, you can write whatever you want, however you want it. There can be "question prompts", making the ramification dynamic similar to Quora. There can be "discussion prompts", tilting more towards Twitter's dynamic. There are endless possibilities for new prompts, its impossible to guess all of them now, the best way to predict the futere is by writing it.</p>
         </Card.Text>
         </Card.Body>
       </Card>

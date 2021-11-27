@@ -2,8 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { Container, Button, Card, Form, Row, Col } from 'react-bootstrap';
 
-const Feed = ({promptById, counter, ramificationsById, ramificate}) => {
-  const [cid, setCid] = useState(undefined);
+const Feed = ({promptById, counter, ramificationsById, ramificate, updateCounter}) => {
   const [text, setText] = useState(undefined);
   const [ramifications, setRamifications] = useState(undefined);
   const [NFTId, setNFTId] = useState(undefined);
@@ -13,7 +12,7 @@ const Feed = ({promptById, counter, ramificationsById, ramificate}) => {
 
   useEffect(() => {
     setNFTId(parseInt(counter)+1);
-    setText('The next prompt is the youngest, then they get older.');
+    setText('0x...The next prompt is the youngest, then they get older.');
     setRamifications(0);
     setShowId(0);
   }, [counter]);
@@ -33,6 +32,7 @@ const Feed = ({promptById, counter, ramificationsById, ramificate}) => {
     formRef.current.reset();
     if(resStatus) {
       alert("Ramification Prompt minted successfully");
+      await updateCounter();
     } else {
       alert("Ramification failed");
     }
@@ -52,7 +52,6 @@ const Feed = ({promptById, counter, ramificationsById, ramificate}) => {
 
   const getPrompt = async (id) => {
     const cid = await promptById(id);
-    setCid(cid);
     const blob = await axios.get(`https://ipfs.io/ipfs/${cid}`);
     setText(blob.data);
     const ramifications = await ramificationsById(id);
@@ -106,10 +105,10 @@ const Feed = ({promptById, counter, ramificationsById, ramificate}) => {
         <Form ref={formRef} onSubmit={(e) => submitRamification(e)}>
         <Form.Group>
         <Form.Control
-          as="textarea" rows="13"  placeholder="Write your ramification...    Once minted, it will become a NFT prompt, anyone will be able to create new prompts by ramificating yours : )"
+          as="textarea" rows="13"  placeholder='Write your ramification...    Once minted, it will become a NFT prompt, anyone will be able to create new prompts by ramificating yours. Every prompt or ramification starts with "0x..." to sinalize different writers : )'
           onChange={e => updateRamification(e)}
         ></Form.Control>
-        <Button variant="dark" type="submit" className="font-weight-bold" style={{color: "silver"}}>Mint Prompt $</Button>
+        <Button variant="dark" type="submit" className="font-weight-bold" style={{color: "silver"}}>Mint Prompt $ (wait a few seconds for the confirmation)</Button>
         </Form.Group>
       </Form>
         </Card.Text>

@@ -55,6 +55,11 @@ function App() {
     init();
   }, []);
 
+  const updateCounter = async () => {
+    const c = await contract.methods.counter().call();
+    setCounter(c);
+  }
+
   const ownerOf = async (nftId) => {
     const owner = await contract.methods.ownerOf(nftId).call();
     return owner;
@@ -77,14 +82,14 @@ function App() {
   };
 
   const ramificate = async (newString, oldString, oldId) => {
-    let formatedString = `${oldString} ...${accounts[0]} ${newString}`;
+    let formatedString = `${oldString} 0x...${newString}`;
     const cid = await storeString(formatedString);
     const res = await contract.methods.mintPrompt(cid, oldId).send({from: accounts[0] });
     return res.status;
   };
 
   const writePrompt = async string => {
-    let formatedString = `...${accounts[0]} ${string}`;
+    let formatedString = `0x...${string}`;
     const cid = await storeString(formatedString);
     const res = await contract.methods.mintPrompt(cid).send({from: accounts[0] });
     return res.status;
@@ -119,7 +124,7 @@ function App() {
     return (
       <div className="my-5 text-center">
         <img src={metamaskLogo} width="250" class="mb-4" alt=""/>
-        <h1>Please install Metamask and connect to Ropsten Network</h1>
+        <h1>Please install Metamask, connect to Ropsten Network and reload this page</h1>
       </div>
     )
   }
@@ -145,10 +150,10 @@ function App() {
       }
       <Switch>
           <Route exact path="/">
-            <WritePrompt writePrompt={writePrompt}  />
+            <WritePrompt writePrompt={writePrompt} updateCounter={updateCounter} />
           </Route>
           <Route exact path="/feed">
-            <Feed counter={counter} promptById={promptById} ramificationsById={ramificationsById} ramificate={ramificate} />
+            <Feed counter={counter} promptById={promptById} ramificationsById={ramificationsById} ramificate={ramificate} updateCounter={updateCounter} />
           </Route>
           <Route exact path="/ramifications">
             <Ramifications counter={counter} promptById={promptById} ramificationsById={ramificationsById} getRamificationCid={getRamificationCid} getRamificationId={getRamificationId} />

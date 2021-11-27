@@ -1,8 +1,8 @@
 # CRYPTO PROMPTS
 
-There is a subreddit called <a href="https://www.reddit.com/r/WritingPrompts/">r/WritingPrompts</a>, where millions of writers contribute to create new content. Crypto Prompts is the implementation of that in the Ethereum Blockchain. Where each prompt or ramification is an ERC-721 Non-Fungible Token that can be bought, sold, transfered or used as a prompt for other ramifications.
+There is a subreddit called <a href="https://www.reddit.com/r/WritingPrompts/">r/WritingPrompts</a>, where millions of writers contribute to create new content. Crypto Prompts is the implementation of that idea in a EVM Blockchain. Where each prompt or ramification is an ERC-721 Non-Fungible Token that can be bought, sold, transfered or used as a prompt for other ramifications.
 
-Crypto Prompts has no owner and no profit. It is a public service, everything you pay here is spent exclusively on blockchain fees. The initial proposal is inspired by Writing Prompts subreddit, with its literary appeal, but there are zero rules here, you can write whatever you want however you want it. There can be question prompts, making the ramification dynamic similar to Quora Digest. There can be discussion prompts, tilting more towards Twitter's dynamic. There are endless possibilities for new prompts, its impossible to guess all of them now, the best way to predict the futere is by writing it.
+Crypto Prompts has no owner and seeks no profit. It is a public service, everything you pay here is spent exclusively on blockchain fees. The initial proposal is inspired by Writing Prompts subreddit, with its literary appeal, but there are zero rules here, you can write whatever you want however you want it. There can be question prompts, making the ramification dynamic similar to Quora. There can be discussion prompts, tilting more towards Twitter's dynamic. There are endless possibilities for new prompts, its impossible to guess all of them now, the best way to predict the futere is by writing it.
 
 
 ## Overview
@@ -11,7 +11,7 @@ Right now, the millions of <a href="https://www.reddit.com/r/WritingPrompts/">r/
 
 Having said that, the 2 main objectives of this dapp are:
 - to attribute ownership to content created through this type of collaboration.
-- to empower writers and wannabe-writers, by make their journey more profitable and trackable.
+- to empower writers and wannabe-writers, by making their journey more profitable and trackable.
 
 As a reader using Crypto Prompts: you will be able to read every prompt and each of its ramifications (if they exist), as well as search for specific prompts, ramifications or even second order ramifications.
 As a writer using Crypto Prompts: you will be able to write new initial prompts and new ramifications for any existing prompt.
@@ -27,7 +27,7 @@ As a writer using Crypto Prompts: you will be able to write new initial prompts 
 
 ## Development
 
-The idea is to have the prompt text stored in IPFS and only the IPFS CIDs stored in the blockchain. The backend is 100% decentralized (IPFS + smart contract).
+The prompt text is stored in IPFS and only the IPFS CIDs is stored in the blockchain. The backend is 100% decentralized (IPFS + smart contract).
 
 Crypto Prompt NFTs inherit from OpenZeppelin's ERC-721 standard.
 
@@ -53,7 +53,7 @@ This is a simple dapp, its core functionality implements two mappings: "promptCi
 4. Run unit tests on default port 9545. Run `truffle test`
 5. Enter frontend folder. Run `cd frontend`
 6. Install frontend dependencies. Run `npm install`
-7. Create .env file inside frontend folder with REACT_APP_NFTSTORAGE_API_KEY = <NFTSTORAGE_API_KEY> (<a href="https://nft.storage/">https://nft.storage/</a>)
+7. Create .env file inside frontend folder with REACT_APP_NFTSTORAGE_API_KEY = <NFTSTORAGE_API_KEY> (you can create a new NFT Storage API Key on <a href="https://nft.storage/">https://nft.storage/</a>)
 8. Once installation is complete, from within the frontend folder run `npm start` to launch the front-end.
 
 
@@ -64,3 +64,7 @@ This is a simple dapp, its core functionality implements two mappings: "promptCi
 ## Public Ethereum Account
 
 "Please also include your public Ethereum account if you would like to receive your certification as an NFT:" Yes, please. Public Ethereum Account: 0x11111081d8428d4F3A82Ee3D64e8C6350eD4FcB5 
+
+## Future Improvements
+
+In the future, by integrating Moralis to this project it will be possible to exclude the ramifications mapping and include a MintedPrompts(uint newId, string newCid, uint oldId) event that would be fired on every mint. With this change, it creates a Moralis backend that records and organizes the historical data of Crypto Prompts making it more accessible and rich. Moralis' back end will also allow purely off-chain functionalities (upvoting prompts, commenting prompts, etc).

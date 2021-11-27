@@ -3,7 +3,6 @@ import axios from 'axios';
 import { Container, Button, Card, Form, Row, Col } from 'react-bootstrap';
 
 const Ramifications = ({promptById, counter, ramificationsById, getRamificationCid, getRamificationId}) => {
-  const [cid, setCid] = useState(undefined);
   const [ramiId, setRamiId] = useState(undefined);
   const [text, setText] = useState(undefined);
   const [ramNumber, setRamNumber] = useState(undefined);
@@ -32,7 +31,6 @@ const Ramifications = ({promptById, counter, ramificationsById, getRamificationC
   const getPrompt = async (promptId, ramificationNumber) => {
     const cid = await getRamificationCid(promptId, ramificationNumber);
     const ramiId = await getRamificationId(promptId, ramificationNumber);
-    setCid(cid);
     setRamiId(ramiId);
     const blob = await axios.get(`https://ipfs.io/ipfs/${cid}`);
     setText(blob.data);

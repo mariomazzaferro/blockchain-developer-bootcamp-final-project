@@ -2,17 +2,17 @@
 
 Since the project has a lean functionality there is almost no attack vector that applies here. Nevertheless the necessary protections have been implemented.
 
-1. Using Specific Compiler Pragma: Yes.
+1. Using Specific Compiler Pragma: Yes, specific compiler pragma 0.8.0 used in contracts to avoid accidental bug inclusion through outdated compiler versions.
 
-2. Proper Use of Require, Assert and Revert: Yes.
+2. Proper Use of Require, Assert and Revert: Yes, require() used inside a modifier.
 
-3. Use Modifiers Only for Validation: Yes.
+3. Use Modifiers Only for Validation: Yes, validOldId() modifier was used exclusively for validation.
 
-4. Pull Over Push: Does not apply.
+4. Pull Over Push: Does not apply, Prompts.sol makes no external contract calls.
 
-5. Checks-Effects-Interactions: Yes.
+5. Checks-Effects-Interactions: Does not apply, Prompts.sol makes no external contract calls.
 
-6. Proper use of .call and .delegateCall: Does not apply.
+6. Proper use of .call and .delegateCall: Does not apply, Prompts.sol makes no external contract calls.
 
 7. Frontrunning: Does not apply.
 

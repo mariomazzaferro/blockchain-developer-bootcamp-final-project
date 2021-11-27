@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Container, Button, Form, Card } from 'react-bootstrap';
 
-const WritePrompt = ({writePrompt}) => {
+const WritePrompt = ({writePrompt, updateCounter}) => {
   const [prompt, setPrompt] = useState(undefined);
   const formRef = useRef(null);
 
@@ -13,6 +13,7 @@ const WritePrompt = ({writePrompt}) => {
       formRef.current.reset();
       if(resStatus) {
         alert("Prompt minted successfully");
+        await updateCounter();
       } else {
         alert("Prompt failed");
       }
@@ -36,7 +37,7 @@ const WritePrompt = ({writePrompt}) => {
           placeholder="Write your prompt... : )"
           onChange={e => updatePrompt(e)}
         ></Form.Control>
-        <Button variant="dark" type="submit" className="font-weight-bold" style={{color: "silver"}}>Mint Prompt $</Button>
+        <Button variant="dark" type="submit" className="font-weight-bold" style={{color: "silver"}}>Mint Prompt $ (wait a few seconds for the confirmation)</Button>
         </Form.Group>
       </Form>
       </Card.Text>
