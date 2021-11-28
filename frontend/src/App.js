@@ -136,7 +136,7 @@ function App() {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto font-weight-bold">
-          <Nav.Link className="px-5" bg="dark" as={Link} to={"/"}><h5>...CRYPTO PROMPTS</h5></Nav.Link>
+          <Nav.Link className="px-5" bg="dark" as={Link} to={"/"}><h5>CRYPTO PROMPTS</h5></Nav.Link>
           <Nav.Link className="px-5" as={Link} to={"/feed"}>FEED</Nav.Link>
           <Nav.Link className="px-5" as={Link} to={"/ramifications"}>RAMIFICATIONS</Nav.Link>
           <Nav.Link className="px-5" as={Link} to={"/ownership"}>OWNERSHIP</Nav.Link>

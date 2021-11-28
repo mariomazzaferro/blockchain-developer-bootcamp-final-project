@@ -17312,12 +17312,12 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0x18167424fdCf4F2ab90404ccc95dE6D779E25f79",
-      "transactionHash": "0xc91face72a1c2359ba72a882c3b7cfa35c6482d9a2e37f0386c04109c1fbe992"
+      "address": "0xAB96AA74f303C1a623600e8060336bEd5EEB4A3E",
+      "transactionHash": "0x34b8debf760dfcc681ad8fb77e183cc1fb4f2ed442893b4d6b603f8a73f6bab7"
     }
   },
   "schemaVersion": "3.4.3",
-  "updatedAt": "2021-11-27T17:01:21.099Z",
+  "updatedAt": "2021-11-28T15:23:21.292Z",
   "networkType": "ethereum",
   "devdoc": {
     "author": "Mario Mazzaferro",
