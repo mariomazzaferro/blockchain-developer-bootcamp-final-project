@@ -72,4 +72,4 @@ https://www.loom.com/share/ead28f81d6c249d48689f1a84b23192e
 
 ## Future Improvements
 
-In the future, by integrating Moralis to this project it will be possible to exclude the ramifications mapping and include a MintedPrompts(uint newId, string newCid, uint oldId) event that would be fired on every mint. This change creates a Moralis backend that records and organizes the historical data of Crypto Prompts making it more accessible and rich. Moralis' back end will also allow purely off-chain functionalities (upvoting prompts, commenting prompts, etc).
+In the future, by integrating Moralis to this project it will be possible to exclude the ramifications mapping and include a MintedPrompt(uint newId, string newCid, uint oldId) event that would be fired on every mint. This change creates a Moralis backend that records and organizes the historical data of Crypto Prompts making it more accessible and rich. Moralis' back end will also allow purely off-chain functionalities (upvoting prompts, commenting prompts, etc).
