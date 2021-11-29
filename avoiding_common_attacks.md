@@ -26,7 +26,7 @@ Since the project has a lean functionality there is almost no attack vector that
 
 12. Reentrancy: Does not apply.
 
-13. Integer Under / Overflow: Yes (SafeMath is generally not needed starting with Solidity 0.8, since the compiler now has built in overflow checking.).
+13. Integer Under / Overflow: Yes (SafeMath is not needed starting with Solidity 0.8, since the compiler now has built in overflow checking.).
 
 14. Unexpected Revert DoS: Does not apply.
 

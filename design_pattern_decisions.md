@@ -12,5 +12,5 @@
 
 6. Optimizing Gas: Prompts.sol usability have been designed to cost as little as possible. The prompts' text data are stored on IPFS and only the essential pointers and logic are stored in the smart contract. The "costly functionality" has been isolated from the "view functionality", so the users that are only readers have a free expecience. Future improvements are planned to lower gas costs even more by: 
 - integrating Moralis (to listen and record fired events, will be a cheaper and more accessible way to store historical data for the dapp)
-- implementing an event called MintedPrompts(uint newId, string newCid, uint oldId) that will be fired on every mint
-- excluding the ramifications mapping (this data will be recorded by fired events instead and collected on Moralis backend)
+- implementing an event called MintedPrompt(uint newId, string newCid, uint oldId) that will be fired on every mint
+- excluding the ramifications mapping (this data will be recorded by fired events and organized on Moralis backend)
